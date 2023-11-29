@@ -25,10 +25,77 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
+    "settings": {
+      "import/parsers": {
+        "@typescript-eslint/parser": [
+          ".ts",
+          ".tsx"
+        ]
+      },
+      "import/resolver": {
+        "node": true,
+        "typescript": true
+      }
+    },
     "extends": [
       "react-app",
-      "react-app/jest"
-    ]
+      "react-app/jest",
+      "plugin:import/recommended",
+      "plugin:import/typescript",
+      "plugin:unicorn/recommended",
+      "prettier",
+      "plugin:perfectionist/recommended-natural",
+      "plugin:sonarjs/recommended"
+    ],
+    "plugins": [
+      "eslint-plugin-import-helpers",
+      "perfectionist",
+      "sonarjs",
+      "react-native"
+    ],
+    "rules": {
+      "@typescript-eslint/no-unused-vars": "error",
+      "react-hooks/exhaustive-deps": 0,
+      "unicorn/filename-case": 0,
+      "unicorn/prefer-module": 1,
+      "unicorn/numeric-separators-style": 0,
+      "unicorn/no-null": 0,
+      "perfectionist/sort-imports": 0,
+      "perfectionist/sort-classes": 0,
+      "react/jsx-sort-props": 0,
+      "import-helpers/order-imports": [
+        "error",
+        {
+          "newlinesBetween": "always",
+          "groups": [
+            [
+              "/^react/",
+              "/^@react-/",
+              "/native-/"
+            ],
+            [
+              "module"
+            ],
+            [
+              "/^@/api/",
+              "/^@/modules/"
+            ],
+            [
+              "/^@//"
+            ],
+            [
+              "parent",
+              "sibling",
+              "index"
+            ]
+          ],
+          "alphabetize": {
+            "order": "ignore",
+            "ignoreCase": true
+          }
+        }
+      ]
+    }
   },
   "browserslist": {
     "production": [
@@ -43,8 +110,17 @@
     ]
   },
   "devDependencies": {
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-config-universe": "^11.0.0",
+    "eslint-plugin-import": "^2.28.0",
+    "eslint-plugin-import-helpers": "^1.2.1",
+    "eslint-plugin-perfectionist": "^1.4.0",
+    "eslint-plugin-sonarjs": "^0.19.0",
+    "eslint-plugin-unicorn": "^45.0.2",
     "postcss": "^8.4.31",
     "postcss-preset-mantine": "^1.11.0",
-    "postcss-simple-vars": "^7.0.1"
+    "postcss-simple-vars": "^7.0.1",
+    "prettier": "^3.1.0"
   }
 }
