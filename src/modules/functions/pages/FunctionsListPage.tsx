@@ -1,42 +1,42 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
-import { useChannelsApi } from "@/modules/channels/api";
 import { ChannelModalContent } from "@/modules/channels/components/ChannelModalContent";
-import { useChannelsList } from "@/modules/channels/hooks";
 import { ChannelsListItem } from "@/modules/channels/types";
+import { useFunctionsApi } from "@/modules/functions/api";
+import { useFunctionsList } from "@/modules/functions/hooks";
 import { Button, Group, Modal, Paper, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { useState } from "react";
 
-export const ChannelsListPage = () => {
+export const FunctionsListPage = () => {
   const { projects } = useMobXStore();
-  const { create, update } = useChannelsApi();
-  const channels = useChannelsList(projects.currentProject);
+  const { create, update } = useFunctionsApi();
+  const functions = useFunctionsList(projects.currentProject);
   const [opened, { close, open }] = useDisclosure(false);
   const [channel, setChannel] = useState<ChannelsListItem>(null);
 
-  console.info("cjh", channels.list);
+  console.info("cjh", functions.list);
 
   return (
     <Stack gap={"lg"}>
       <Group justify="space-between">
-        <Title order={4}>Channels list</Title>
+        <Title order={4}>Functions</Title>
         <Button onClick={open} size={"xs"}>
-          Add chanel
+          Add function
         </Button>
       </Group>
 
       <Stack>
-        {channels.list.map((value) => (
-          <Paper key={value.channel_id} p="md" shadow="xs" withBorder>
+        {functions.list.map((value) => (
+          <Paper key={value.function_id} p="md" shadow="xs" withBorder>
             <Stack>
               <Stack gap={"xs"}>
-                <Title order={3}>{value.type}</Title>
-                <Text size={"xs"}>{value.api_key}</Text>
+                <Title order={4}>{value.name}</Title>
+                <Text size={"sm"}>{value.description}</Text>
               </Stack>
               <Group>
                 <Button
                   onClick={() => {
-                    setChannel(value);
+                    // setChannel(value);
                     open();
                   }}
                   size={"xs"}

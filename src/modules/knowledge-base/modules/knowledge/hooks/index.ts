@@ -1,11 +1,11 @@
-import { useChannelsApi } from "@/modules/channels/api";
+import { useKnowledgeApi } from "@/modules/knowledge-base/modules/knowledge/api";
 import { useItemsList } from "@/sdk/utils/hooks/useItemsList";
 
-export const useChannelsList = (projectId: string) => {
-  const api = useChannelsApi();
+export const useKnowledgeList = (projectId: string, kbId: string) => {
+  const api = useKnowledgeApi();
   return useItemsList(
-    `projects:${projectId}::channels`,
-    () => api.list(projectId),
+    `projects:${projectId}::knowledge-base:${kbId}::knowledge`,
+    () => api.list(projectId, kbId),
     (item) => item,
     {
       dedupingInterval: 60e3,

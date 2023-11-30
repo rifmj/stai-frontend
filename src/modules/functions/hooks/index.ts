@@ -1,10 +1,10 @@
-import { useChannelsApi } from "@/modules/channels/api";
+import { useFunctionsApi } from "@/modules/functions/api";
 import { useItemsList } from "@/sdk/utils/hooks/useItemsList";
 
-export const useChannelsList = (projectId: string) => {
-  const api = useChannelsApi();
+export const useFunctionsList = (projectId: string) => {
+  const api = useFunctionsApi();
   return useItemsList(
-    `projects:${projectId}::channels`,
+    `projects:${projectId}::functions`,
     () => api.list(projectId),
     (item) => item,
     {
