@@ -4,6 +4,7 @@ import { StoreContext } from "@/core/store/StoreContext";
 import { SignInPage } from "@/modules/auth/pages/SignInPage";
 import { SignUpPage } from "@/modules/auth/pages/SignUpPage";
 import { ChannelsListPage } from "@/modules/channels/pages/ChannelsListPage";
+import { ChatPageView } from "@/modules/chats/pages/ChatPage";
 import { ChatsListPage } from "@/modules/chats/pages/ChatsListPage";
 import { FunctionsListPage } from "@/modules/functions/pages/FunctionsListPage";
 import { KnowledgeBaseListPage } from "@/modules/knowledge-base/pages/KnowledgeBaseListPage";
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         element: <ChatsListPage />,
         path: "/chats",
+      },
+      {
+        element: <ChatPageView />,
+        path: "/chats/:chatId",
       },
       {
         element: <FunctionsListPage />,

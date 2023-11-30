@@ -11,5 +11,11 @@ export interface ChatsListItem {
   state: string;
 }
 
+export interface ChatMessagesListItem {
+  content: string;
+  message_id: string;
+  role: string;
+}
+
 export type ChatsListResponse = ChatsListItem[];
 export type ChatResponse = ChatsListItem;

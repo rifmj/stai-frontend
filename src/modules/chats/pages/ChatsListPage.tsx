@@ -9,6 +9,7 @@ import {
 } from "@tabler/icons-react";
 import { observer } from "mobx-react";
 import React from "react";
+import { NavLink as RRNavLink } from "react-router-dom";
 
 export const ChatsListPageView = () => {
   const { projects } = useMobXStore();
@@ -40,12 +41,24 @@ export const ChatsListPageView = () => {
       {chats.list.map((value) => (
         <Paper key={value.chat_id} p="md" shadow="xs" withBorder>
           <Stack>
-            <Stack gap={4}>
-              <Text size={"md"}>
-                {value.client.name} (
-                {value.client.custom_fields?.first_name ?? ""})
-              </Text>
-              <Text size={"xs"}>{value.client_id}</Text>
+            <Stack>
+              <Stack gap={4}>
+                <Text size={"md"}>
+                  {value.client.name} (
+                  {value.client.custom_fields?.first_name ?? ""})
+                </Text>
+                <Text size={"xs"}>{value.client_id}</Text>
+              </Stack>
+              <Group>
+                <Button
+                  component={RRNavLink}
+                  size={"xs"}
+                  to={`${value.chat_id}`}
+                  variant={"light"}
+                >
+                  Open
+                </Button>
+              </Group>
             </Stack>
           </Stack>
         </Paper>
