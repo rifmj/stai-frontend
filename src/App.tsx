@@ -11,6 +11,7 @@ import { KnowledgeBasePage } from "@/modules/knowledge-base/pages/KnowledgeBaseP
 import { ProjectsListPage } from "@/modules/projects/pages/ProjectsListPage";
 import { SettingsPage } from "@/modules/settings/pages/SettingsPage";
 import { MantineProvider, createTheme } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
@@ -69,10 +70,12 @@ const theme = createTheme({
 function App() {
   return (
     <MantineProvider defaultColorScheme={"dark"} theme={theme}>
-      <StoreContext.Provider value={store}>
-        <Notifications />
-        <RouterProvider router={router} />
-      </StoreContext.Provider>
+      <ModalsProvider>
+        <StoreContext.Provider value={store}>
+          <Notifications />
+          <RouterProvider router={router} />
+        </StoreContext.Provider>
+      </ModalsProvider>
     </MantineProvider>
   );
 }

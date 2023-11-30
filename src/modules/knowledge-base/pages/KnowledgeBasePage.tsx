@@ -17,15 +17,16 @@ import {
   Title,
   rem,
 } from "@mantine/core";
-import { useDebounceCallback, useDisclosure } from "@mantine/hooks";
-import { Spotlight, SpotlightActionData, spotlight } from "@mantine/spotlight";
+import { useDisclosure } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
+import { Spotlight, spotlight } from "@mantine/spotlight";
 import {
   IconPencil,
   IconPlus,
   IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
-import { debounce, throttle } from "lodash";
+import { debounce } from "lodash";
 import React, {
   useCallback,
   useEffect,
@@ -106,7 +107,16 @@ export const KnowledgeBasePage = () => {
       })) ?? []
     : [];
 
-  console.info("xa", currentQuery, actions);
+  const openModal = (knowledgeId: string) =>
+    modals.openConfirmModal({
+      labels: { cancel: "Cancel", confirm: "Confirm" },
+      onCancel: () => console.log("Cancel"),
+      onConfirm: async () => {
+        await knowledgeApi.delete(projects.currentProject, kbId, knowledgeId);
+        await knowledge.mutate();
+      },
+      title: "Please confirm delete",
+    });
 
   return (
     <Stack gap={"lg"}>
@@ -162,12 +172,7 @@ export const KnowledgeBasePage = () => {
 
                 <Button
                   onClick={async () => {
-                    await knowledgeApi.delete(
-                      projects.currentProject,
-                      kbId,
-                      value.knowledge_id,
-                    );
-                    await knowledge.mutate();
+                    await openModal(value.knowledge_id);
                   }}
                   color={"red"}
                   rightSection={<IconTrash size={14} />}
