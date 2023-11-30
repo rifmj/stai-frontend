@@ -5,9 +5,10 @@ import { useChannelsList } from "@/modules/channels/hooks";
 import { ChannelsListItem } from "@/modules/channels/types";
 import { Button, Group, Modal, Paper, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { observer } from "mobx-react";
 import React, { useState } from "react";
 
-export const ChannelsListPage = () => {
+export const ChannelsListPageView = () => {
   const { projects } = useMobXStore();
   const { create, update } = useChannelsApi();
   const channels = useChannelsList(projects.currentProject);
@@ -72,3 +73,5 @@ export const ChannelsListPage = () => {
     </Stack>
   );
 };
+
+export const ChannelsListPage = observer(ChannelsListPageView);

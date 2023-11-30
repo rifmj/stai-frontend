@@ -2,20 +2,13 @@ import logo from "@/assets/logo.svg";
 import { useMobXStore } from "@/core/store/useMobXStore";
 import { useAuth } from "@/core/user/useAuth";
 import { useProjectsList } from "@/modules/projects/hooks";
-import { Avatar, Group, Menu, Select, Text, rem } from "@mantine/core";
-import {
-  IconArrowsLeftRight,
-  IconLogout,
-  IconMessageCircle,
-  IconPhoto,
-  IconSearch,
-  IconSettings,
-  IconTrash,
-} from "@tabler/icons-react";
+import { Avatar, Group, Menu, Select, rem } from "@mantine/core";
+import { IconListDetails, IconLogout, IconSettings } from "@tabler/icons-react";
+import { observer } from "mobx-react";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
-export const AppHeader = () => {
+export const AppHeader = observer(() => {
   const navigate = useNavigate();
   const { projects } = useMobXStore();
   const { signOut } = useAuth();
@@ -56,6 +49,16 @@ export const AppHeader = () => {
               Settings
             </Menu.Item>
 
+            <Menu.Item
+              leftSection={
+                <IconListDetails style={{ height: rem(14), width: rem(14) }} />
+              }
+              component={NavLink}
+              to={"/projects"}
+            >
+              Projects
+            </Menu.Item>
+
             <Menu.Divider />
 
             <Menu.Label>Danger zone</Menu.Label>
@@ -76,4 +79,4 @@ export const AppHeader = () => {
       </Group>
     </Group>
   );
-};
+});

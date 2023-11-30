@@ -4,9 +4,11 @@ import { StoreContext } from "@/core/store/StoreContext";
 import { SignInPage } from "@/modules/auth/pages/SignInPage";
 import { SignUpPage } from "@/modules/auth/pages/SignUpPage";
 import { ChannelsListPage } from "@/modules/channels/pages/ChannelsListPage";
+import { ChatsListPage } from "@/modules/chats/pages/ChatsListPage";
 import { FunctionsListPage } from "@/modules/functions/pages/FunctionsListPage";
 import { KnowledgeBaseListPage } from "@/modules/knowledge-base/pages/KnowledgeBaseListPage";
 import { KnowledgeBasePage } from "@/modules/knowledge-base/pages/KnowledgeBasePage";
+import { ProjectsListPage } from "@/modules/projects/pages/ProjectsListPage";
 import { SettingsPage } from "@/modules/settings/pages/SettingsPage";
 import { MantineProvider, createTheme } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
@@ -31,6 +33,10 @@ const router = createBrowserRouter([
         path: "/channels",
       },
       {
+        element: <ChatsListPage />,
+        path: "/chats",
+      },
+      {
         element: <FunctionsListPage />,
         path: "/functions",
       },
@@ -41,6 +47,10 @@ const router = createBrowserRouter([
       {
         element: <KnowledgeBaseListPage />,
         path: "/kb",
+      },
+      {
+        element: <ProjectsListPage />,
+        path: "/projects",
       },
       {
         element: <KnowledgeBasePage />,

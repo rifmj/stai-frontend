@@ -80,7 +80,7 @@ export const KnowledgeBaseListPage = () => {
         opened={opened}
         title="Add channel"
       >
-        {/*<ChannelModalContent*/}
+        {/*<ProjectModalContent*/}
         {/*  onSubmit={async (values) => {*/}
         {/*    await (item*/}
         {/*      ? create(projects.currentProject, values)*/}

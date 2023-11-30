@@ -71,14 +71,6 @@ export const KnowledgeBasePage = () => {
               </Stack>
               <Group>
                 <Button
-                  component={RRNavLink}
-                  size={"xs"}
-                  to={`kb/${value.kb_id}`}
-                  variant={"light"}
-                >
-                  Open
-                </Button>
-                <Button
                   onClick={() => {
                     setItem(value);
                     open();
@@ -102,7 +94,7 @@ export const KnowledgeBasePage = () => {
         opened={opened}
         title="Add channel"
       >
-        {/*<ChannelModalContent*/}
+        {/*<ProjectModalContent*/}
         {/*  onSubmit={async (values) => {*/}
         {/*    await (item*/}
         {/*      ? create(projects.currentProject, values)*/}

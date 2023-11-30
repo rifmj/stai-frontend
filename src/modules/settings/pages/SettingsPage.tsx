@@ -17,6 +17,7 @@ import {
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
+import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 
 const INITIAL_VALUES: SettingsItem = {
@@ -27,7 +28,7 @@ const INITIAL_VALUES: SettingsItem = {
   use_voice_recognition: false,
 };
 
-export const SettingsPage = () => {
+export const SettingsPageView = () => {
   const { projects } = useMobXStore();
   const settingsApi = useSettingsApi();
 
@@ -59,7 +60,7 @@ export const SettingsPage = () => {
       <Box pos="relative">
         <LoadingOverlay
           overlayProps={{ blur: 2, radius: "sm" }}
-          visible={isLoading}
+          visible={isLoading || settings.isLoading}
           zIndex={1000}
         />
         <form
@@ -132,3 +133,5 @@ export const SettingsPage = () => {
     </Stack>
   );
 };
+
+export const SettingsPage = observer(SettingsPageView);

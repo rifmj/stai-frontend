@@ -5,9 +5,10 @@ import { useFunctionsApi } from "@/modules/functions/api";
 import { useFunctionsList } from "@/modules/functions/hooks";
 import { Button, Group, Modal, Paper, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { observer } from "mobx-react";
 import React, { useState } from "react";
 
-export const FunctionsListPage = () => {
+export const FunctionsListPageView = () => {
   const { projects } = useMobXStore();
   const { create, update } = useFunctionsApi();
   const functions = useFunctionsList(projects.currentProject);
@@ -72,3 +73,5 @@ export const FunctionsListPage = () => {
     </Stack>
   );
 };
+
+export const FunctionsListPage = observer(FunctionsListPageView);

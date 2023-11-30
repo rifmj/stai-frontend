@@ -35,7 +35,7 @@ export default class ProjectsApi {
   }
 
   async update(id: string, data: UpdateProject) {
-    const response = await this.deps.api.post<ProjectResponse>(
+    const response = await this.deps.api.put<ProjectResponse>(
       `projects/${id}`,
       data,
     );
