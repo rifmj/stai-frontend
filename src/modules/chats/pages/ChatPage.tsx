@@ -1,5 +1,6 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
 import { useChatMessages } from "@/modules/chats/hooks";
+import { formatDate } from "@/sdk/utils/date";
 import {
   Alert,
   Button,
@@ -41,8 +42,9 @@ export const ChatPageView = () => {
             key={value.message_id}
             title={value.role}
           >
-            <Text c="dimmed" size="sm">
-              {value.content}
+            <Text size="sm">{value.content}</Text>
+            <Text c="dimmed" size="xs">
+              {formatDate(value.datetime)}
             </Text>
           </Timeline.Item>
         ))}

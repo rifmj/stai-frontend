@@ -67,7 +67,12 @@ export const SettingsPageView = () => {
           onSubmit={form.onSubmit(async (values) => {
             enableLoading();
             try {
-              await settingsApi.update(projects.currentProject, values);
+              await settingsApi.update(projects.currentProject, {
+                ...values,
+                max_tokens: Number.parseInt(
+                  values.max_tokens as unknown as string,
+                ),
+              });
               notifications.show({
                 color: "teal",
                 message: "Settings updated",

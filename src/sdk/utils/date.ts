@@ -1,7 +1,7 @@
 import DateFnsFormat from "date-fns/format";
 import formatDistance from "date-fns/formatDistance";
 import isToday from "date-fns/isToday";
-import ruLocale from "date-fns/locale/ru";
+import enLocale from "date-fns/locale/en-US";
 import parseISO from "date-fns/parseISO";
 
 export const formatDate = (
@@ -13,13 +13,13 @@ export const formatDate = (
     ? isToday(parseISO(date))
       ? formatDistance(new Date(), parseISO(date), {
           includeSeconds: true,
-          locale: ruLocale,
+          locale: enLocale,
         }) + "назад"
       : DateFnsFormat(parseISO(date), format, {
-          locale: ruLocale,
+          locale: enLocale,
         })
     : DateFnsFormat(parseISO(date), format, {
-        locale: ruLocale,
+        locale: enLocale,
       });
 };
 

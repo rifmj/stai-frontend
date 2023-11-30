@@ -71,7 +71,7 @@ export const ChannelsListPageView = () => {
                 <Title order={3}>{value.type}</Title>
                 <Text size={"xs"}>{value.api_key}</Text>
               </Stack>
-              <Group>
+              <Group gap={"xs"}>
                 <Button
                   onClick={() => {
                     setChannel(value);

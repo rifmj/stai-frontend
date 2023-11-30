@@ -13,6 +13,7 @@ export interface ChatsListItem {
 
 export interface ChatMessagesListItem {
   content: string;
+  datetime: string;
   message_id: string;
   role: string;
 }
