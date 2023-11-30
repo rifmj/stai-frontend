@@ -23,6 +23,13 @@ export default class ChannelsApi {
     return response.data;
   }
 
+  async delete(projectId: string, id: string) {
+    const response = await this.deps.api.post<ProjectResponse>(
+      `projects/${projectId}/channels/${id}`,
+    );
+    return response.data;
+  }
+
   async get(projectId: string, id: string) {
     const data = await this.deps.api.get<ChannelResponse>(
       `projects/${projectId}/channels/${id}`,

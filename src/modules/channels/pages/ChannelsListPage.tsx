@@ -14,7 +14,13 @@ import {
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconInfoCircle, IconPencil, IconRefresh } from "@tabler/icons-react";
+import { modals } from "@mantine/modals";
+import {
+  IconInfoCircle,
+  IconPencil,
+  IconRefresh,
+  IconTrash,
+} from "@tabler/icons-react";
 import { observer } from "mobx-react";
 import React, { useState } from "react";
 
@@ -26,6 +32,17 @@ export const ChannelsListPageView = () => {
   const [channel, setChannel] = useState<ChannelsListItem>(null);
 
   console.info("cjh", channels.list);
+
+  const openDeleteModal = (channelId: string) =>
+    modals.openConfirmModal({
+      labels: { cancel: "Cancel", confirm: "Confirm" },
+      onCancel: () => console.log("Cancel"),
+      onConfirm: async () => {
+        await channelsApi.delete(projects.currentProject, channelId);
+        await channels.mutate();
+      },
+      title: "Please confirm delete",
+    });
 
   return (
     <Stack gap={"lg"}>
@@ -65,6 +82,17 @@ export const ChannelsListPageView = () => {
                   variant={"light"}
                 >
                   Edit
+                </Button>
+                <Button
+                  onClick={() => {
+                    openDeleteModal(value.channel_id);
+                  }}
+                  color={"red"}
+                  rightSection={<IconTrash size={14} />}
+                  size={"xs"}
+                  variant={"light"}
+                >
+                  Delete
                 </Button>
                 <Button
                   onClick={async () => {
