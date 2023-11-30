@@ -14,6 +14,7 @@
     "@types/react-dom": "^18.2.17",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
@@ -40,61 +41,22 @@
     "extends": [
       "react-app",
       "react-app/jest",
-      "plugin:import/recommended",
-      "plugin:import/typescript",
       "plugin:unicorn/recommended",
       "prettier",
       "plugin:perfectionist/recommended-natural",
       "plugin:sonarjs/recommended"
     ],
     "plugins": [
-      "eslint-plugin-import-helpers",
       "perfectionist",
-      "sonarjs",
-      "react-native"
+      "sonarjs"
     ],
     "rules": {
       "@typescript-eslint/no-unused-vars": "error",
       "react-hooks/exhaustive-deps": 0,
       "unicorn/filename-case": 0,
       "unicorn/prefer-module": 1,
-      "unicorn/numeric-separators-style": 0,
-      "unicorn/no-null": 0,
-      "perfectionist/sort-imports": 0,
-      "perfectionist/sort-classes": 0,
-      "react/jsx-sort-props": 0,
-      "import-helpers/order-imports": [
-        "error",
-        {
-          "newlinesBetween": "always",
-          "groups": [
-            [
-              "/^react/",
-              "/^@react-/",
-              "/native-/"
-            ],
-            [
-              "module"
-            ],
-            [
-              "/^@/api/",
-              "/^@/modules/"
-            ],
-            [
-              "/^@//"
-            ],
-            [
-              "parent",
-              "sibling",
-              "index"
-            ]
-          ],
-          "alphabetize": {
-            "order": "ignore",
-            "ignoreCase": true
-          }
-        }
-      ]
+      "unicorn/expiring-todo-comments": 0,
+      "unicorn/numeric-separators-style": 0
     }
   },
   "browserslist": {
