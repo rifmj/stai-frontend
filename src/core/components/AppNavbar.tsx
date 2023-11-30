@@ -1,6 +1,7 @@
 import { NavLink, Stack } from "@mantine/core";
 import {
   IconBrain,
+  IconChartAreaLineFilled,
   IconMathFunction,
   IconMessages,
   IconPlugConnected,
@@ -35,18 +36,25 @@ export const AppNavbar = () => {
         to={"/functions"}
       />
       <NavLink
-        active={window.location.pathname === "/chats"}
+        active={window.location.pathname.startsWith("/chats")}
         component={RRNavLink}
         label="Chats"
         leftSection={<IconMessages size="1rem" stroke={1.5} />}
         to={"/chats"}
       />
       <NavLink
-        active={window.location.pathname === "/kb"}
+        active={window.location.pathname.startsWith("/kb")}
         component={RRNavLink}
         label="Knowledge base"
         leftSection={<IconBrain size="1rem" stroke={1.5} />}
         to={"/kb"}
+      />
+      <NavLink
+        active={window.location.pathname === "/statistics"}
+        component={RRNavLink}
+        label="Statistics"
+        leftSection={<IconChartAreaLineFilled size="1rem" stroke={1.5} />}
+        to={"/settings"}
       />
       <NavLink
         active={window.location.pathname === "/settings"}
