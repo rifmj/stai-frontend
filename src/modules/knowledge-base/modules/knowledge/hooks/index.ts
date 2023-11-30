@@ -9,7 +9,6 @@ export const useKnowledgeList = (projectId: string, kbId: string) => {
     (item) => item,
     {
       dedupingInterval: 60e3,
-      revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnMount: true,
       revalidateOnReconnect: true,

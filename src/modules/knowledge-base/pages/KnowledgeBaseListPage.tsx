@@ -14,10 +14,11 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconInfoCircle } from "@tabler/icons-react";
+import { observer } from "mobx-react";
 import React, { useState } from "react";
 import { NavLink as RRNavLink } from "react-router-dom";
 
-export const KnowledgeBaseListPage = () => {
+export const KnowledgeBaseListPageView = () => {
   const { projects } = useMobXStore();
   const knowledgeBaseApi = useKnowledgeBaseApi();
   const knowledgeBase = useKnowledgeBaseList(projects.currentProject);
@@ -102,3 +103,5 @@ export const KnowledgeBaseListPage = () => {
     </Stack>
   );
 };
+
+export const KnowledgeBaseListPage = observer(KnowledgeBaseListPageView);

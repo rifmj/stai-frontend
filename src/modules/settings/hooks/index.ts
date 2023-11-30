@@ -10,7 +10,6 @@ export const useSettings = (projectId: string) => {
     (item) => item,
     {
       dedupingInterval: 60e3,
-      revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnMount: true,
       revalidateOnReconnect: true,
@@ -26,7 +25,6 @@ export const useModelsSettings = (projectId: string) => {
     (item) => item,
     {
       dedupingInterval: 60e3,
-      revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnMount: true,
       revalidateOnReconnect: true,
