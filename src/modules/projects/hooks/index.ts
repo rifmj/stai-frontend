@@ -7,5 +7,11 @@ export const useProjectsList = () => {
     "projects",
     () => api.list(),
     (item) => item,
+    {
+      dedupingInterval: 60e3,
+      revalidateOnFocus: false,
+      revalidateOnMount: true,
+      revalidateOnReconnect: true,
+    },
   );
 };

@@ -1,29 +1,47 @@
+import logo from "@/assets/logo.svg";
+import { useMobXStore } from "@/core/store/useMobXStore";
+import { useAuth } from "@/core/user/useAuth";
 import { useProjectsList } from "@/modules/projects/hooks";
 import { Avatar, Group, Menu, Select, Text, rem } from "@mantine/core";
 import {
   IconArrowsLeftRight,
+  IconLogout,
   IconMessageCircle,
   IconPhoto,
   IconSearch,
   IconSettings,
   IconTrash,
 } from "@tabler/icons-react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export const AppHeader = () => {
-  const projects = useProjectsList();
+  const navigate = useNavigate();
+  const { projects } = useMobXStore();
+  const { signOut } = useAuth();
+  const projectsList = useProjectsList();
+  console.info("current project", projects.currentProject);
   return (
     <Group justify={"space-between"}>
-      <div>stAI</div>
+      <img height={16} src={logo} />
       <Group>
         <Select
-          data={projects.list.map((value) => value.project_name)}
+          data={projectsList.list.map((value) => ({
+            label: value.project_name,
+            value: value.project_id,
+          }))}
+          onChange={(value) => {
+            projects.setCurrentProject(value);
+            console.info("value", value);
+          }}
           placeholder="Select project"
           size={"xs"}
+          value={projects.currentProject}
         />
 
         <Menu shadow="md" width={200}>
           <Menu.Target>
-            <Avatar color="blue" radius="xl" style={{ cursor: "pointer" }}>
+            <Avatar color="green" radius="xl" style={{ cursor: "pointer" }}>
               VP
             </Avatar>
           </Menu.Target>
@@ -37,54 +55,21 @@ export const AppHeader = () => {
             >
               Settings
             </Menu.Item>
-            <Menu.Item
-              leftSection={
-                <IconMessageCircle
-                  style={{ height: rem(14), width: rem(14) }}
-                />
-              }
-            >
-              Messages
-            </Menu.Item>
-            <Menu.Item
-              leftSection={
-                <IconPhoto style={{ height: rem(14), width: rem(14) }} />
-              }
-            >
-              Gallery
-            </Menu.Item>
-            <Menu.Item
-              leftSection={
-                <IconSearch style={{ height: rem(14), width: rem(14) }} />
-              }
-              rightSection={
-                <Text c="dimmed" size="xs">
-                  ⌘K
-                </Text>
-              }
-            >
-              Search
-            </Menu.Item>
 
             <Menu.Divider />
 
             <Menu.Label>Danger zone</Menu.Label>
             <Menu.Item
               leftSection={
-                <IconArrowsLeftRight
-                  style={{ height: rem(14), width: rem(14) }}
-                />
+                <IconLogout style={{ height: rem(14), width: rem(14) }} />
               }
-            >
-              Transfer my data
-            </Menu.Item>
-            <Menu.Item
-              leftSection={
-                <IconTrash style={{ height: rem(14), width: rem(14) }} />
-              }
+              onClick={() => {
+                signOut();
+                navigate("/sign-in");
+              }}
               color="red"
             >
-              Delete my account
+              Sign out
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>

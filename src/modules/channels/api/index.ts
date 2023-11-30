@@ -1,6 +1,8 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
+import { ChannelForm } from "@/modules/channels/components/ChannelModalContent";
 import {
-  CreateProject,
+  ChannelResponse,
+  ChannelsListResponse,
   ProjectResponse,
   ProjectsListResponse,
   UpdateProject,
@@ -15,29 +17,31 @@ export default class ChannelsApi {
     },
   ) {}
 
-  async create(data: CreateProject) {
+  async create(projectId: string, data: ChannelForm) {
     const response = await this.deps.api.post<ProjectResponse>(
-      `channels`,
+      `projects/${projectId}/channels`,
       data,
     );
     return response.data;
   }
 
-  async get(id: string) {
-    const data = await this.deps.api.get<ProjectResponse>(`channels/${id}`);
+  async get(projectId: string, id: string) {
+    const data = await this.deps.api.get<ChannelResponse>(
+      `projects/${projectId}/channels/${id}`,
+    );
     return data.data;
   }
 
   async list(projectId: string) {
-    const data = await this.deps.api.get<ProjectsListResponse>(
+    const data = await this.deps.api.get<ChannelsListResponse>(
       `projects/${projectId}/channels`,
     );
     return data.data;
   }
 
-  async update(id: string, data: UpdateProject) {
+  async update(projectId: string, id: string, data: ChannelForm) {
     const response = await this.deps.api.post<ProjectResponse>(
-      `channels/${id}`,
+      `projects/${projectId}channels/${id}`,
       data,
     );
     return response.data;

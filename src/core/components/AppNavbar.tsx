@@ -7,14 +7,17 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export const AppNavbar = () => {
+  const navigate = useNavigate();
   return (
     <Stack gap={0}>
       <NavLink
         active
         label="Channels"
         leftSection={<IconPlugConnected size="1rem" stroke={1.5} />}
+        onClick={() => navigate("/channels")}
       />
 
       <NavLink

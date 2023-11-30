@@ -34,7 +34,7 @@ const router = createBrowserRouter([
 ]);
 
 const theme = createTheme({
-  /** Put your mantine theme override here */
+  primaryColor: "green",
 });
 
 function App() {

@@ -1,11 +1,12 @@
+import { AuthError } from "@/core/exceptions";
 import UserApi from "@/core/user/User.api";
 import Api from "@/sdk/services/Api";
 import logger, { LoggerSpace } from "@/sdk/utils/Logger";
-import { computed, makeAutoObservable, runInAction, when } from "mobx";
+import { action, computed, makeAutoObservable, runInAction, when } from "mobx";
 import { makePersistable } from "mobx-persist-store";
 
 export default class UserStore {
-  private api: UserApi;
+  private api: UserApi = new UserApi({ api: this.deps.api });
   access_token: string;
   public expoPushToken: string | undefined = undefined;
 
@@ -26,12 +27,12 @@ export default class UserStore {
   ) {
     makeAutoObservable(this);
     makePersistable(this, {
-      name: "UserStore",
+      name: "stAIUserStore",
       properties: ["access_token", "refresh_token", "user", "expoPushToken"],
+      storage: window.localStorage,
     }).then((value) => {
       this.isHydrated = true;
     });
-    this.api = new UserApi({ api: deps.api });
   }
 
   async init() {
@@ -52,7 +53,7 @@ export default class UserStore {
 
   @computed
   public get isAuthorized() {
-    return Boolean(this.user);
+    return Boolean(this.access_token);
   }
 
   async loadCurrentUser() {
@@ -84,6 +85,25 @@ export default class UserStore {
   }
 
   setSignedOut(value: boolean | null) {
-    this.isSignedOut = false;
+    this.isSignedOut = value;
+  }
+
+  @action.bound
+  async signIn(username: string, password: string) {
+    try {
+      console.info("123", this.api);
+      const tokens = await this.api.login(username, password);
+      this.access_token = tokens.access_token;
+      this.refresh_token = tokens.refresh_token;
+      return true;
+    } catch (error) {
+      console.info("User.store:signIn", error);
+      throw new AuthError("Something went wrong");
+    }
+  }
+
+  signOut() {
+    this.access_token = undefined;
+    this.refresh_token = undefined;
   }
 }

@@ -8,5 +8,12 @@ export const useChannelsList = (projectId: string) => {
     `projects:${projectId}::channels`,
     () => api.list(projectId),
     (item) => item,
+    {
+      dedupingInterval: 60e3,
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnMount: true,
+      revalidateOnReconnect: true,
+    },
   );
 };

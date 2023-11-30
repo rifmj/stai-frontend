@@ -10,6 +10,7 @@ export const ProtectedRoute = () => {
   const { isAuthenticated } = useAuth();
   if (!isAuthenticated) {
     navigate("/sign-in");
+    return;
   }
   return (
     <AppShell
