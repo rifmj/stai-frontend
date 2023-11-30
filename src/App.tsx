@@ -7,7 +7,9 @@ import { ChannelsListPage } from "@/modules/channels/pages/ChannelsListPage";
 import { FunctionsListPage } from "@/modules/functions/pages/FunctionsListPage";
 import { KnowledgeBaseListPage } from "@/modules/knowledge-base/pages/KnowledgeBaseListPage";
 import { KnowledgeBasePage } from "@/modules/knowledge-base/pages/KnowledgeBasePage";
+import { SettingsPage } from "@/modules/settings/pages/SettingsPage";
 import { MantineProvider, createTheme } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
@@ -33,6 +35,10 @@ const router = createBrowserRouter([
         path: "/functions",
       },
       {
+        element: <SettingsPage />,
+        path: "/settings",
+      },
+      {
         element: <KnowledgeBaseListPage />,
         path: "/kb",
       },
@@ -54,6 +60,7 @@ function App() {
   return (
     <MantineProvider defaultColorScheme={"dark"} theme={theme}>
       <StoreContext.Provider value={store}>
+        <Notifications />
         <RouterProvider router={router} />
       </StoreContext.Provider>
     </MantineProvider>

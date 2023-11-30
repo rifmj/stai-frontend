@@ -50,8 +50,10 @@ export const AppNavbar = () => {
       />
       <NavLink
         active={window.location.pathname === "/settings"}
+        component={RRNavLink}
         label="Settings"
         leftSection={<IconSettings size="1rem" stroke={1.5} />}
+        to={"/settings"}
       />
     </Stack>
   );
