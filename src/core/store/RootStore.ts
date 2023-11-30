@@ -8,7 +8,8 @@ export class RootStore implements IStore {
   public api: Api = new Api({
     getAccessToken: () => {
       // @ts-ignore
-      return AccessToken.from(this.user.access_token);
+      // return AccessToken.from(this.user.access_token);
+      return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzYTAyYjQyYi00ODA3LTQ0MjQtOGZiZS05N2JmNzk1MDZmZjMiLCJ1c2VybmFtZSI6InRlc3RAdGVzdC5jb20iLCJpYXQiOjE3MDEzNDc2MTgsImV4cCI6MTcwNDAyNjAxOH0.-3sAUGIfMdOgiIADTZY8z8QhgD95AY8V5CpWAli2bxg";
     },
   });
 

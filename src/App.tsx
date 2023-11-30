@@ -1,6 +1,12 @@
+import { AppHeader } from "@/core/components/AppHeader";
+import { AppNavbar } from "@/core/components/AppNavbar";
+import { ProtectedRoute } from "@/core/navigation/ProtectedRoute";
 import { store } from "@/core/store";
 import { StoreContext } from "@/core/store/StoreContext";
-import { MantineProvider, createTheme } from "@mantine/core";
+import { SignInPage } from "@/modules/auth/pages/SignInPage";
+import { SignUpPage } from "@/modules/auth/pages/SignUpPage";
+import { ChannelsListPage } from "@/modules/channels/pages/ChannelsListPage";
+import { AppShell, MantineProvider, createTheme } from "@mantine/core";
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
@@ -8,7 +14,21 @@ import "./App.css";
 
 const router = createBrowserRouter([
   {
-    element: <div>Hello world!</div>,
+    element: <SignInPage />,
+    path: "/sign-in",
+  },
+  {
+    element: <SignUpPage />,
+    path: "/sign-in",
+  },
+  {
+    children: [
+      {
+        element: <ChannelsListPage />,
+        path: "/channels",
+      },
+    ],
+    element: <ProtectedRoute />,
     path: "/",
   },
 ]);
@@ -19,7 +39,7 @@ const theme = createTheme({
 
 function App() {
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider defaultColorScheme={"dark"} theme={theme}>
       <StoreContext.Provider value={store}>
         <RouterProvider router={router} />
       </StoreContext.Provider>
