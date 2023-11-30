@@ -1,3 +1,5 @@
+import { store } from "@/core/store";
+import { StoreContext } from "@/core/store/StoreContext";
 import { MantineProvider, createTheme } from "@mantine/core";
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
@@ -18,7 +20,9 @@ const theme = createTheme({
 function App() {
   return (
     <MantineProvider theme={theme}>
-      <RouterProvider router={router} />
+      <StoreContext.Provider value={store}>
+        <RouterProvider router={router} />
+      </StoreContext.Provider>
     </MantineProvider>
   );
 }
