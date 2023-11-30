@@ -1,5 +1,9 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
 import {
+  KnowledgeResponse,
+  KnowledgeSearchListItem,
+} from "@/modules/knowledge-base/modules/knowledge/types";
+import {
   CreateKnowledgeBase,
   KnowledgeBaseListResponse,
   KnowledgeBaseResponse,
@@ -34,6 +38,13 @@ export default class KnowledgeBaseApi {
       `projects/${projectId}/knowledge-base`,
     );
     return data.data;
+  }
+
+  async search(projectId: string, id: string, query: string) {
+    const response = await this.deps.api.get<KnowledgeSearchListItem[]>(
+      `projects/${projectId}/knowledge-base/${id}/search?query=${query}`,
+    );
+    return response.data;
   }
 
   async update(projectId: string, id: string, data: CreateKnowledgeBase) {

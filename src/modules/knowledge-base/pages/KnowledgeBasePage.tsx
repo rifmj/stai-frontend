@@ -1,4 +1,5 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
+import { useKnowledgeBaseApi } from "@/modules/knowledge-base/api";
 import { KnowledgeModalContent } from "@/modules/knowledge-base/components/KnowledgeModalContent";
 import { useKnowledgeBaseList } from "@/modules/knowledge-base/hooks";
 import { useKnowledgeApi } from "@/modules/knowledge-base/modules/knowledge/api";
@@ -14,15 +15,31 @@ import {
   Stack,
   Text,
   Title,
+  rem,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
-import React, { useMemo, useState } from "react";
+import { useDebounceCallback, useDisclosure } from "@mantine/hooks";
+import { Spotlight, SpotlightActionData, spotlight } from "@mantine/spotlight";
+import {
+  IconPencil,
+  IconPlus,
+  IconSearch,
+  IconTrash,
+} from "@tabler/icons-react";
+import { debounce, throttle } from "lodash";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { NavLink as RRNavLink, useParams } from "react-router-dom";
+import useSWR from "swr";
 
 export const KnowledgeBasePage = () => {
   const { projects } = useMobXStore();
   const knowledgeApi = useKnowledgeApi();
+  const knowledgeBaseApi = useKnowledgeBaseApi();
 
   const { kbId } = useParams();
 
@@ -48,6 +65,49 @@ export const KnowledgeBasePage = () => {
     </Anchor>
   ));
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentQuery, setCurrentQuery] = useState("");
+
+  const searchResult = useSWR(`search:${currentQuery}`, () =>
+    searchQuery
+      ? knowledgeBaseApi.search(projects.currentProject, kbId, searchQuery)
+      : null,
+  );
+
+  console.info("sdfsd", searchResult.data);
+
+  let queryReference = useRef("");
+
+  const functionToDebounce = useCallback((query: string) => {
+    console.info("e1", queryReference, query);
+    setCurrentQuery(query);
+  }, []);
+
+  const setQueryDebounced = useCallback(
+    debounce(functionToDebounce, 1200, {
+      leading: false,
+      trailing: true,
+    }),
+    [],
+  );
+
+  useEffect(() => {
+    if (searchQuery) {
+      queryReference.current = searchQuery;
+      setQueryDebounced(searchQuery);
+    }
+  }, [searchQuery, setQueryDebounced]);
+
+  const actions = currentQuery
+    ? searchResult?.data?.map((value) => ({
+        description: value.text,
+        id: value.knowledge_id,
+        label: value.knowledge_id,
+      })) ?? []
+    : [];
+
+  console.info("xa", currentQuery, actions);
+
   return (
     <Stack gap={"lg"}>
       <Breadcrumbs mt="xs" separator="→">
@@ -56,9 +116,27 @@ export const KnowledgeBasePage = () => {
 
       <Group justify="space-between">
         <Title order={4}>{base?.name}</Title>
-        <Button onClick={open} size={"xs"}>
-          Add knowledge
-        </Button>
+        <Group>
+          <Button
+            leftSection={
+              <IconSearch style={{ height: rem(14), width: rem(14) }} />
+            }
+            onClick={() => spotlight.open()}
+            size={"xs"}
+            variant={"light"}
+          >
+            Search
+          </Button>
+          <Button
+            leftSection={
+              <IconPlus style={{ height: rem(14), width: rem(14) }} />
+            }
+            onClick={open}
+            size={"xs"}
+          >
+            Add knowledge
+          </Button>
+        </Group>
       </Group>
 
       <Stack>
@@ -129,6 +207,25 @@ export const KnowledgeBasePage = () => {
           initialValues={item}
         />
       </Modal>
+
+      <Spotlight
+        searchProps={{
+          leftSection: (
+            <IconSearch
+              stroke={1.5}
+              style={{ height: rem(20), width: rem(20) }}
+            />
+          ),
+          placeholder: "Search...",
+        }}
+        actions={actions}
+        closeOnActionTrigger={false}
+        highlightQuery
+        limit={7}
+        nothingFound={currentQuery ? "Nothing found" : "Enter your query"}
+        onQueryChange={(query) => setSearchQuery(query)}
+        query={searchQuery}
+      />
     </Stack>
   );
 };

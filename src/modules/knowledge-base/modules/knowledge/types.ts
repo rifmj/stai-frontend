@@ -4,6 +4,10 @@ export interface KnowledgeListItem {
   text: string;
 }
 
+export interface KnowledgeSearchListItem extends KnowledgeListItem {
+  embedding: string;
+}
+
 export type KnowledgeForm = Exclude<
   KnowledgeListItem,
   "kb_id" | "knowledge_id"
