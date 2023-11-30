@@ -4,8 +4,6 @@ import {
   ChannelResponse,
   ChannelsListResponse,
   ProjectResponse,
-  ProjectsListResponse,
-  UpdateProject,
 } from "@/modules/channels/types";
 import Api from "@/sdk/services/Api";
 import { useMemo } from "react";
@@ -32,9 +30,23 @@ export default class ChannelsApi {
     return data.data;
   }
 
+  async getWebhook(projectId: string, id: string) {
+    const data = await this.deps.api.get<ChannelResponse>(
+      `projects/${projectId}/channels/${id}/webhook`,
+    );
+    return data.data;
+  }
+
   async list(projectId: string) {
     const data = await this.deps.api.get<ChannelsListResponse>(
       `projects/${projectId}/channels`,
+    );
+    return data.data;
+  }
+
+  async refreshWebhook(projectId: string, id: string) {
+    const data = await this.deps.api.put<ChannelResponse>(
+      `projects/${projectId}/channels/${id}/webhook`,
     );
     return data.data;
   }

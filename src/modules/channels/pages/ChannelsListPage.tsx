@@ -14,13 +14,13 @@ import {
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { IconInfoCircle, IconPencil, IconRefresh } from "@tabler/icons-react";
 import { observer } from "mobx-react";
 import React, { useState } from "react";
 
 export const ChannelsListPageView = () => {
   const { projects } = useMobXStore();
-  const { create, update } = useChannelsApi();
+  const channelsApi = useChannelsApi();
   const channels = useChannelsList(projects.currentProject);
   const [opened, { close, open }] = useDisclosure(false);
   const [channel, setChannel] = useState<ChannelsListItem>(null);
@@ -60,10 +60,39 @@ export const ChannelsListPageView = () => {
                     setChannel(value);
                     open();
                   }}
+                  rightSection={<IconPencil size={14} />}
                   size={"xs"}
                   variant={"light"}
                 >
                   Edit
+                </Button>
+                <Button
+                  onClick={async () => {
+                    await channelsApi.getWebhook(
+                      projects.currentProject,
+                      value.channel_id,
+                    );
+                  }}
+                  color={"blue"}
+                  rightSection={<IconInfoCircle size={14} />}
+                  size={"xs"}
+                  variant={"light"}
+                >
+                  Webhook info
+                </Button>
+                <Button
+                  onClick={async () => {
+                    await channelsApi.refreshWebhook(
+                      projects.currentProject,
+                      value.channel_id,
+                    );
+                  }}
+                  color={"blue"}
+                  rightSection={<IconRefresh size={14} />}
+                  size={"xs"}
+                  variant={"light"}
+                >
+                  Refresh webhook
                 </Button>
               </Group>
             </Stack>
@@ -77,13 +106,17 @@ export const ChannelsListPageView = () => {
           setChannel(null);
         }}
         opened={opened}
-        title="Add channel"
+        title={channel ? "Edit channel" : "Add channel"}
       >
         <ChannelModalContent
           onSubmit={async (values) => {
             await (channel
-              ? create(projects.currentProject, values)
-              : update(projects.currentProject, channel.channel_id, values));
+              ? channelsApi.create(projects.currentProject, values)
+              : channelsApi.update(
+                  projects.currentProject,
+                  channel.channel_id,
+                  values,
+                ));
             setChannel(null);
             close();
           }}
