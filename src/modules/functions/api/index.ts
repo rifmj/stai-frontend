@@ -1,8 +1,9 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
-import { ChannelForm } from "@/modules/channels/components/ChannelModalContent";
 import {
+  CreateFunction,
   FunctionResponse,
   FunctionsListResponse,
+  UpdateFunction,
 } from "@/modules/functions/types";
 import Api from "@/sdk/services/Api";
 import { useMemo } from "react";
@@ -14,12 +15,19 @@ export default class FunctionsApi {
     },
   ) {}
 
-  async create(projectId: string, data: ChannelForm) {
+  async create(projectId: string, data: CreateFunction) {
     const response = await this.deps.api.post<FunctionResponse>(
       `projects/${projectId}/functions`,
       data,
     );
     return response.data;
+  }
+
+  async delete(projectId: string, id: string) {
+    const response = await this.deps.api.delete<FunctionResponse>(
+      `projects/${projectId}/functions/${id}`,
+    );
+    return true;
   }
 
   async get(projectId: string, id: string) {
@@ -36,7 +44,7 @@ export default class FunctionsApi {
     return data.data;
   }
 
-  async update(projectId: string, id: string, data: ChannelForm) {
+  async update(projectId: string, id: string, data: UpdateFunction) {
     const response = await this.deps.api.post<FunctionResponse>(
       `projects/${projectId}/functions/${id}`,
       data,

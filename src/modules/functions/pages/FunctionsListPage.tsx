@@ -1,21 +1,30 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
-import { ChannelModalContent } from "@/modules/channels/components/ChannelModalContent";
-import { ChannelsListItem } from "@/modules/channels/types";
 import { useFunctionsApi } from "@/modules/functions/api";
+import { FunctionModalContent } from "@/modules/functions/components/FunctionModalContent";
 import { useFunctionsList } from "@/modules/functions/hooks";
-import { Button, Group, Modal, Paper, Stack, Text, Title } from "@mantine/core";
-import { Alert } from "@mantine/core";
+import { FunctionsListItem } from "@/modules/functions/types";
+import {
+  Alert,
+  Button,
+  Group,
+  Modal,
+  Paper,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { IconInfoCircle, IconPencil, IconTrash } from "@tabler/icons-react";
+import { cloneDeep } from "lodash";
 import { observer } from "mobx-react";
 import React, { useState } from "react";
 
 export const FunctionsListPageView = () => {
   const { projects } = useMobXStore();
-  const { create, update } = useFunctionsApi();
+  const functionsApi = useFunctionsApi();
   const functions = useFunctionsList(projects.currentProject);
   const [opened, { close, open }] = useDisclosure(false);
-  const [channel, setChannel] = useState<ChannelsListItem>(null);
+  const [item, setItem] = useState<FunctionsListItem>(null);
 
   return (
     <Stack gap={"lg"}>
@@ -47,13 +56,31 @@ export const FunctionsListPageView = () => {
               <Group>
                 <Button
                   onClick={() => {
-                    // setChannel(value);
+                    setItem(value);
                     open();
                   }}
+                  color={"teal"}
+                  rightSection={<IconPencil size={14} />}
                   size={"xs"}
                   variant={"light"}
                 >
                   Edit
+                </Button>
+
+                <Button
+                  onClick={async () => {
+                    await functionsApi.delete(
+                      projects.currentProject,
+                      item.function_id,
+                    );
+                    await functions.mutate();
+                  }}
+                  color={"red"}
+                  rightSection={<IconTrash size={14} />}
+                  size={"xs"}
+                  variant={"light"}
+                >
+                  Delete
                 </Button>
               </Group>
             </Stack>
@@ -64,20 +91,30 @@ export const FunctionsListPageView = () => {
       <Modal
         onClose={() => {
           close();
-          setChannel(null);
+          setItem(null);
         }}
         opened={opened}
-        title="Add channel"
+        title={item ? "Edit function" : "Add function"}
       >
-        <ChannelModalContent
+        <FunctionModalContent
           onSubmit={async (values) => {
-            await (channel
-              ? create(projects.currentProject, values)
-              : update(projects.currentProject, channel.channel_id, values));
-            setChannel(null);
+            const data = cloneDeep(values);
+            const final: FunctionsListItem = {
+              ...data,
+              function_data: JSON.parse(data["function_data"]),
+              parameters: JSON.parse(data["parameters"]),
+            };
+            await (item
+              ? functionsApi.create(projects.currentProject, final)
+              : functionsApi.update(
+                  projects.currentProject,
+                  item.function_id,
+                  final,
+                ));
+            setItem(null);
             close();
           }}
-          initialValues={channel}
+          initialValues={item}
         />
       </Modal>
     </Stack>
