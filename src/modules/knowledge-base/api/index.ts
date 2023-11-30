@@ -1,6 +1,6 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
-import { ChannelForm } from "@/modules/channels/components/ChannelModalContent";
 import {
+  CreateKnowledgeBase,
   KnowledgeBaseListResponse,
   KnowledgeBaseResponse,
 } from "@/modules/knowledge-base/types";
@@ -14,7 +14,7 @@ export default class KnowledgeBaseApi {
     },
   ) {}
 
-  async create(projectId: string, data: ChannelForm) {
+  async create(projectId: string, data: CreateKnowledgeBase) {
     const response = await this.deps.api.post<KnowledgeBaseResponse>(
       `projects/${projectId}/knowledge-base`,
       data,
@@ -36,8 +36,8 @@ export default class KnowledgeBaseApi {
     return data.data;
   }
 
-  async update(projectId: string, id: string, data: ChannelForm) {
-    const response = await this.deps.api.post<KnowledgeBaseResponse>(
+  async update(projectId: string, id: string, data: CreateKnowledgeBase) {
+    const response = await this.deps.api.put<KnowledgeBaseResponse>(
       `projects/${projectId}/knowledge-base/${id}`,
       data,
     );

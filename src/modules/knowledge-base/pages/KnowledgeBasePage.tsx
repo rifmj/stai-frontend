@@ -1,9 +1,7 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
-import { useKnowledgeBaseApi } from "@/modules/knowledge-base/api";
-import {
-  useKnowledgeBase,
-  useKnowledgeBaseList,
-} from "@/modules/knowledge-base/hooks";
+import { KnowledgeModalContent } from "@/modules/knowledge-base/components/KnowledgeModalContent";
+import { useKnowledgeBaseList } from "@/modules/knowledge-base/hooks";
+import { useKnowledgeApi } from "@/modules/knowledge-base/modules/knowledge/api";
 import { useKnowledgeList } from "@/modules/knowledge-base/modules/knowledge/hooks";
 import { KnowledgeListItem } from "@/modules/knowledge-base/modules/knowledge/types";
 import {
@@ -18,12 +16,13 @@ import {
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { IconPencil, IconTrash } from "@tabler/icons-react";
 import React, { useMemo, useState } from "react";
 import { NavLink as RRNavLink, useParams } from "react-router-dom";
 
 export const KnowledgeBasePage = () => {
   const { projects } = useMobXStore();
-  const { create, update } = useKnowledgeBaseApi();
+  const knowledgeApi = useKnowledgeApi();
 
   const { kbId } = useParams();
 
@@ -75,10 +74,29 @@ export const KnowledgeBasePage = () => {
                     setItem(value);
                     open();
                   }}
+                  color={"teal"}
+                  rightSection={<IconPencil size={14} />}
                   size={"xs"}
                   variant={"light"}
                 >
                   Edit
+                </Button>
+
+                <Button
+                  onClick={async () => {
+                    await knowledgeApi.delete(
+                      projects.currentProject,
+                      kbId,
+                      value.knowledge_id,
+                    );
+                    await knowledge.mutate();
+                  }}
+                  color={"red"}
+                  rightSection={<IconTrash size={14} />}
+                  size={"xs"}
+                  variant={"light"}
+                >
+                  Delete
                 </Button>
               </Group>
             </Stack>
@@ -92,18 +110,24 @@ export const KnowledgeBasePage = () => {
           setItem(null);
         }}
         opened={opened}
-        title="Add channel"
+        title={item ? "Edit knowledge" : "Add knowledge"}
       >
-        {/*<ProjectModalContent*/}
-        {/*  onSubmit={async (values) => {*/}
-        {/*    await (item*/}
-        {/*      ? create(projects.currentProject, values)*/}
-        {/*      : update(projects.currentProject, channel.channel_id, values));*/}
-        {/*    setItem(null);*/}
-        {/*    close();*/}
-        {/*  }}*/}
-        {/*  initialValues={channel}*/}
-        {/*/>*/}
+        <KnowledgeModalContent
+          onSubmit={async (values) => {
+            await (item
+              ? knowledgeApi.update(
+                  projects.currentProject,
+                  item.kb_id,
+                  item.knowledge_id,
+                  values,
+                )
+              : knowledgeApi.create(projects.currentProject, kbId, values));
+            await knowledge.mutate();
+            setItem(null);
+            close();
+          }}
+          initialValues={item}
+        />
       </Modal>
     </Stack>
   );

@@ -22,6 +22,13 @@ export default class KnowledgeApi {
     return response.data;
   }
 
+  async delete(projectId: string, id: string, knowledgeId: string) {
+    const response = await this.deps.api.delete<KnowledgeResponse>(
+      `projects/${projectId}/knowledge-base/${id}/knowledge/${knowledgeId}`,
+    );
+    return true;
+  }
+
   async get(projectId: string, kbId: string, knowledgeId: string) {
     const data = await this.deps.api.get<KnowledgeResponse>(
       `projects/${projectId}/knowledge-base/${kbId}/knowledge/${knowledgeId}`,
@@ -42,7 +49,7 @@ export default class KnowledgeApi {
     knowledgeId: string,
     data: KnowledgeForm,
   ) {
-    const response = await this.deps.api.post<KnowledgeResponse>(
+    const response = await this.deps.api.put<KnowledgeResponse>(
       `projects/${projectId}/knowledge-base/${id}/knowledge/${knowledgeId}`,
       data,
     );

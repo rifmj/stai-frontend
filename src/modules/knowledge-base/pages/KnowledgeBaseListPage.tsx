@@ -1,4 +1,6 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
+import { useKnowledgeBaseApi } from "@/modules/knowledge-base/api";
+import { KnowledgeBaseModalContent } from "@/modules/knowledge-base/components/KnowledgeBaseModalContent";
 import { useKnowledgeBaseList } from "@/modules/knowledge-base/hooks";
 import { KnowledgeBaseListItem } from "@/modules/knowledge-base/types";
 import {
@@ -17,11 +19,10 @@ import { NavLink as RRNavLink } from "react-router-dom";
 
 export const KnowledgeBaseListPage = () => {
   const { projects } = useMobXStore();
+  const knowledgeBaseApi = useKnowledgeBaseApi();
   const knowledgeBase = useKnowledgeBaseList(projects.currentProject);
   const [opened, { close, open }] = useDisclosure(false);
   const [item, setItem] = useState<KnowledgeBaseListItem>(null);
-
-  console.info("knowledgeBase", knowledgeBase.list);
 
   return (
     <Stack gap={"lg"}>
@@ -80,18 +81,23 @@ export const KnowledgeBaseListPage = () => {
           setItem(null);
         }}
         opened={opened}
-        title="Add channel"
+        title={item ? "Edit knowledge base" : "Add knowledge base"}
       >
-        {/*<ProjectModalContent*/}
-        {/*  onSubmit={async (values) => {*/}
-        {/*    await (item*/}
-        {/*      ? create(projects.currentProject, values)*/}
-        {/*      : update(projects.currentProject, channel.channel_id, values));*/}
-        {/*    setItem(null);*/}
-        {/*    close();*/}
-        {/*  }}*/}
-        {/*  initialValues={channel}*/}
-        {/*/>*/}
+        <KnowledgeBaseModalContent
+          onSubmit={async (values) => {
+            await (item
+              ? knowledgeBaseApi.update(
+                  projects.currentProject,
+                  item.kb_id,
+                  values,
+                )
+              : knowledgeBaseApi.create(projects.currentProject, values));
+            await knowledgeBase.mutate();
+            setItem(null);
+            close();
+          }}
+          initialValues={item}
+        />
       </Modal>
     </Stack>
   );
