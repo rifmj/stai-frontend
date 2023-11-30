@@ -1,30 +1,22 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
-import { useChannelsApi } from "@/modules/channels/api";
-import { ChannelModalContent } from "@/modules/channels/components/ChannelModalContent";
-import { useChannelsList } from "@/modules/channels/hooks";
-import { ChannelsListItem } from "@/modules/channels/types";
-import { useFunctionsApi } from "@/modules/functions/api";
-import { useFunctionsList } from "@/modules/functions/hooks";
-import { useKnowledgeBaseApi } from "@/modules/knowledge-base/api";
 import { useKnowledgeBaseList } from "@/modules/knowledge-base/hooks";
 import { KnowledgeBaseListItem } from "@/modules/knowledge-base/types";
 import {
+  Alert,
   Button,
   Group,
   Modal,
-  NavLink,
   Paper,
   Stack,
-  Text,
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { IconInfoCircle } from "@tabler/icons-react";
 import React, { useState } from "react";
 import { NavLink as RRNavLink } from "react-router-dom";
 
 export const KnowledgeBaseListPage = () => {
   const { projects } = useMobXStore();
-  const { create, update } = useKnowledgeBaseApi();
   const knowledgeBase = useKnowledgeBaseList(projects.currentProject);
   const [opened, { close, open }] = useDisclosure(false);
   const [item, setItem] = useState<KnowledgeBaseListItem>(null);
@@ -41,6 +33,16 @@ export const KnowledgeBaseListPage = () => {
       </Group>
 
       <Stack>
+        {!knowledgeBase.isLoading &&
+        !knowledgeBase.error &&
+        knowledgeBase.list.length === 0 ? (
+          <Alert
+            color="indigo"
+            icon={<IconInfoCircle />}
+            title="Nothing found"
+            variant="light"
+          />
+        ) : null}
         {knowledgeBase.list.map((value) => (
           <Paper key={value.kb_id} p="md" shadow="xs" withBorder>
             <Stack>

@@ -3,8 +3,18 @@ import { useChannelsApi } from "@/modules/channels/api";
 import { ChannelModalContent } from "@/modules/channels/components/ChannelModalContent";
 import { useChannelsList } from "@/modules/channels/hooks";
 import { ChannelsListItem } from "@/modules/channels/types";
-import { Button, Group, Modal, Paper, Stack, Text, Title } from "@mantine/core";
+import {
+  Alert,
+  Button,
+  Group,
+  Modal,
+  Paper,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { IconInfoCircle } from "@tabler/icons-react";
 import { observer } from "mobx-react";
 import React, { useState } from "react";
 
@@ -27,6 +37,16 @@ export const ChannelsListPageView = () => {
       </Group>
 
       <Stack>
+        {!channels.isLoading &&
+        !channels.error &&
+        channels.list.length === 0 ? (
+          <Alert
+            color="indigo"
+            icon={<IconInfoCircle />}
+            title="Nothing found"
+            variant="light"
+          />
+        ) : null}
         {channels.list.map((value) => (
           <Paper key={value.channel_id} p="md" shadow="xs" withBorder>
             <Stack>

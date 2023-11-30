@@ -1,6 +1,7 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
 import { useChatsList } from "@/modules/chats/hooks";
-import { Group, Stack, Title } from "@mantine/core";
+import { Alert, Group, Stack, Title } from "@mantine/core";
+import { IconInfoCircle } from "@tabler/icons-react";
 import { observer } from "mobx-react";
 import React from "react";
 
@@ -13,6 +14,12 @@ export const ChatsListPageView = () => {
       <Group justify="space-between">
         <Title order={4}>Chats</Title>
       </Group>
+      <Alert
+        color="indigo"
+        icon={<IconInfoCircle />}
+        title="Nothing found"
+        variant="light"
+      />
     </Stack>
   );
 };

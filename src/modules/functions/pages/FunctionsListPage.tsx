@@ -4,7 +4,9 @@ import { ChannelsListItem } from "@/modules/channels/types";
 import { useFunctionsApi } from "@/modules/functions/api";
 import { useFunctionsList } from "@/modules/functions/hooks";
 import { Button, Group, Modal, Paper, Stack, Text, Title } from "@mantine/core";
+import { Alert } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { IconInfoCircle } from "@tabler/icons-react";
 import { observer } from "mobx-react";
 import React, { useState } from "react";
 
@@ -14,8 +16,6 @@ export const FunctionsListPageView = () => {
   const functions = useFunctionsList(projects.currentProject);
   const [opened, { close, open }] = useDisclosure(false);
   const [channel, setChannel] = useState<ChannelsListItem>(null);
-
-  console.info("cjh", functions.list);
 
   return (
     <Stack gap={"lg"}>
@@ -27,6 +27,16 @@ export const FunctionsListPageView = () => {
       </Group>
 
       <Stack>
+        {!functions.isLoading &&
+        !functions.error &&
+        functions.list.length === 0 ? (
+          <Alert
+            color="indigo"
+            icon={<IconInfoCircle />}
+            title="Nothing found"
+            variant="light"
+          />
+        ) : null}
         {functions.list.map((value) => (
           <Paper key={value.function_id} p="md" shadow="xs" withBorder>
             <Stack>
