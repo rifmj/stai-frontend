@@ -5,12 +5,19 @@ import {
   Alert,
   Button,
   Group,
+  Paper,
   Stack,
   Text,
   Timeline,
   Title,
 } from "@mantine/core";
-import { IconInfoCircle, IconMessage, IconRefresh } from "@tabler/icons-react";
+import {
+  IconInfoCircle,
+  IconInputAi,
+  IconMessage,
+  IconRefresh,
+  IconUser,
+} from "@tabler/icons-react";
 import { observer } from "mobx-react";
 import React from "react";
 import { useParams } from "react-router-dom";
@@ -35,17 +42,37 @@ export const ChatPageView = () => {
         </Button>
       </Group>
 
-      <Timeline active={1} bulletSize={24} lineWidth={2}>
+      <Timeline bulletSize={24} lineWidth={2}>
         {messages.list.map((value) => (
           <Timeline.Item
-            bullet={<IconMessage size={12} />}
+            bullet={
+              value.role === "User" ? (
+                <IconUser size={12} />
+              ) : (
+                <IconInputAi size={12} />
+              )
+            }
             key={value.message_id}
-            title={value.role}
           >
-            <Text size="sm">{value.content}</Text>
-            <Text c="dimmed" size="xs">
-              {formatDate(value.datetime)}
-            </Text>
+            <Group justify={"space-between"} mb={"xs"}>
+              <Text
+                gradient={
+                  value.role === "User"
+                    ? { deg: 0, from: "cyan", to: "teal" }
+                    : { deg: 0, from: "lime", to: "green" }
+                }
+                size="sm"
+                variant="gradient"
+              >
+                {value.role}
+              </Text>
+              <Text c="dimmed" size="xs">
+                {formatDate(value.datetime)}
+              </Text>
+            </Group>
+            <Paper p="xs" shadow="sm" withBorder>
+              <Text size="sm">{value.content}</Text>
+            </Paper>
           </Timeline.Item>
         ))}
       </Timeline>
