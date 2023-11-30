@@ -5,7 +5,7 @@ import { makePersistable } from "mobx-persist-store";
 
 export default class Config {
   @observable
-  public useDarkMode = false;
+  public useDarkMode = true;
 
   constructor(
     private deps: {
@@ -16,6 +16,7 @@ export default class Config {
     makePersistable(this, {
       name: "ConfigStore",
       properties: ["useDarkMode"],
+      storage: window.localStorage,
     }).then((value) => {
       logger.logWithTitle(
         LoggerSpace.Bootstrap,
@@ -23,5 +24,9 @@ export default class Config {
         value,
       );
     });
+  }
+
+  setUseDarkMode(value: boolean) {
+    this.useDarkMode = value;
   }
 }

@@ -2,15 +2,22 @@ import logo from "@/assets/logo.svg";
 import { useMobXStore } from "@/core/store/useMobXStore";
 import { useAuth } from "@/core/user/useAuth";
 import { useProjectsList } from "@/modules/projects/hooks";
-import { Avatar, Group, Menu, Select, rem } from "@mantine/core";
-import { IconListDetails, IconLogout, IconSettings } from "@tabler/icons-react";
+import { ActionIcon, Avatar, Group, Menu, Select, rem } from "@mantine/core";
+import {
+  IconAdjustments,
+  IconListDetails,
+  IconLogout,
+  IconMoon,
+  IconSettings,
+  IconSun,
+} from "@tabler/icons-react";
 import { observer } from "mobx-react";
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 export const AppHeader = observer(() => {
   const navigate = useNavigate();
-  const { projects } = useMobXStore();
+  const { config, projects } = useMobXStore();
   const { signOut } = useAuth();
   const projectsList = useProjectsList();
   console.info("current project", projects.currentProject);
@@ -33,6 +40,18 @@ export const AppHeader = observer(() => {
         />
 
         <Menu shadow="md" width={200}>
+          <ActionIcon
+            aria-label="Settings"
+            onClick={() => config.setUseDarkMode(!config.useDarkMode)}
+            variant="light"
+          >
+            {config.useDarkMode ? (
+              <IconMoon stroke={1.5} style={{ height: "70%", width: "70%" }} />
+            ) : (
+              <IconSun stroke={1.5} style={{ height: "70%", width: "70%" }} />
+            )}
+          </ActionIcon>
+
           <Menu.Target>
             <Avatar color="green" radius="xl" style={{ cursor: "pointer" }}>
               VP

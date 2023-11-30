@@ -1,6 +1,7 @@
 import { ProtectedRoute } from "@/core/navigation/ProtectedRoute";
 import { store } from "@/core/store";
 import { StoreContext } from "@/core/store/StoreContext";
+import { useMobXStore } from "@/core/store/useMobXStore";
 import { SignInPage } from "@/modules/auth/pages/SignInPage";
 import { SignUpPage } from "@/modules/auth/pages/SignUpPage";
 import { ChannelsListPage } from "@/modules/channels/pages/ChannelsListPage";
@@ -14,6 +15,7 @@ import { SettingsPage } from "@/modules/settings/pages/SettingsPage";
 import { MantineProvider, createTheme } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
+import { observer } from "mobx-react";
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
@@ -74,15 +76,27 @@ const theme = createTheme({
 
 function App() {
   return (
-    <MantineProvider defaultColorScheme={"dark"} theme={theme}>
+    <StoreContext.Provider value={store}>
+      <AppContent />
+    </StoreContext.Provider>
+  );
+}
+
+const AppContentView = () => {
+  const { config } = useMobXStore();
+  return (
+    <MantineProvider
+      forceColorScheme={config.useDarkMode === true ? "dark" : "light"}
+      theme={theme}
+    >
       <ModalsProvider>
-        <StoreContext.Provider value={store}>
-          <Notifications />
-          <RouterProvider router={router} />
-        </StoreContext.Provider>
+        <Notifications />
+        <RouterProvider router={router} />
       </ModalsProvider>
     </MantineProvider>
   );
-}
+};
+
+const AppContent = observer(AppContentView);
 
 export default App;
