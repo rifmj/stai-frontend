@@ -81,7 +81,7 @@ export function FunctionModalContent(properties: {
           label="Description"
           maxRows={8}
           minRows={3}
-          {...form.getInputProps("name")}
+          {...form.getInputProps("description")}
         />
         <JsonInput
           autosize

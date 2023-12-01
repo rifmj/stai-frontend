@@ -1,6 +1,15 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
 import { useChatsList } from "@/modules/chats/hooks";
-import { Alert, Button, Group, Paper, Stack, Text, Title } from "@mantine/core";
+import {
+  Alert,
+  Button,
+  Group,
+  Paper,
+  SimpleGrid,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import {
   IconInfoCircle,
   IconPencil,
@@ -38,31 +47,33 @@ export const ChatsListPageView = () => {
         />
       ) : null}
 
-      {chats.list.map((value) => (
-        <Paper key={value.chat_id} p="md" shadow="xs" withBorder>
-          <Stack>
+      <SimpleGrid cols={3}>
+        {chats.list.map((value) => (
+          <Paper key={value.chat_id} p="md" shadow="xs" withBorder>
             <Stack>
-              <Stack gap={4}>
-                <Text size={"md"}>
-                  {value.client.name} (
-                  {value.client.custom_fields?.first_name ?? ""})
-                </Text>
-                <Text size={"xs"}>{value.client_id}</Text>
+              <Stack>
+                <Stack gap={4}>
+                  <Text size={"md"}>
+                    {value.client.name} (
+                    {value.client.custom_fields?.first_name ?? ""})
+                  </Text>
+                  <Text size={"xs"}>{value.client_id}</Text>
+                </Stack>
+                <Group>
+                  <Button
+                    component={RRNavLink}
+                    size={"xs"}
+                    to={`${value.chat_id}`}
+                    variant={"light"}
+                  >
+                    Open
+                  </Button>
+                </Group>
               </Stack>
-              <Group>
-                <Button
-                  component={RRNavLink}
-                  size={"xs"}
-                  to={`${value.chat_id}`}
-                  variant={"light"}
-                >
-                  Open
-                </Button>
-              </Group>
             </Stack>
-          </Stack>
-        </Paper>
-      ))}
+          </Paper>
+        ))}
+      </SimpleGrid>
     </Stack>
   );
 };

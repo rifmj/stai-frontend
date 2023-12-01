@@ -9,6 +9,7 @@ import {
   Group,
   Modal,
   Paper,
+  SimpleGrid,
   Stack,
   Title,
 } from "@mantine/core";
@@ -45,35 +46,38 @@ export const KnowledgeBaseListPageView = () => {
             variant="light"
           />
         ) : null}
-        {knowledgeBase.list.map((value) => (
-          <Paper key={value.kb_id} p="md" shadow="xs" withBorder>
-            <Stack>
-              <Stack gap={0}>
-                <Title order={3}>{value.name}</Title>
+
+        <SimpleGrid cols={3}>
+          {knowledgeBase.list.map((value) => (
+            <Paper key={value.kb_id} p="md" shadow="xs" withBorder>
+              <Stack>
+                <Stack gap={0}>
+                  <Title order={3}>{value.name}</Title>
+                </Stack>
+                <Group>
+                  <Button
+                    component={RRNavLink}
+                    size={"xs"}
+                    to={`${value.kb_id}`}
+                    variant={"light"}
+                  >
+                    Open
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setItem(value);
+                      open();
+                    }}
+                    size={"xs"}
+                    variant={"light"}
+                  >
+                    Edit
+                  </Button>
+                </Group>
               </Stack>
-              <Group>
-                <Button
-                  component={RRNavLink}
-                  size={"xs"}
-                  to={`${value.kb_id}`}
-                  variant={"light"}
-                >
-                  Open
-                </Button>
-                <Button
-                  onClick={() => {
-                    setItem(value);
-                    open();
-                  }}
-                  size={"xs"}
-                  variant={"light"}
-                >
-                  Edit
-                </Button>
-              </Group>
-            </Stack>
-          </Paper>
-        ))}
+            </Paper>
+          ))}
+        </SimpleGrid>
       </Stack>
 
       <Modal

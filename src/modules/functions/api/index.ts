@@ -57,7 +57,7 @@ export default class FunctionsApi {
   }
 
   async update(projectId: string, id: string, data: UpdateFunction) {
-    const response = await this.deps.api.post<FunctionResponse>(
+    const response = await this.deps.api.put<FunctionResponse>(
       `projects/${projectId}/functions/${id}`,
       data,
     );

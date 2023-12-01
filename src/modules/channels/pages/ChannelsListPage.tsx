@@ -9,6 +9,7 @@ import {
   Group,
   Modal,
   Paper,
+  SimpleGrid,
   Stack,
   Text,
   Title,
@@ -64,68 +65,71 @@ export const ChannelsListPageView = () => {
             variant="light"
           />
         ) : null}
-        {channels.list.map((value) => (
-          <Paper key={value.channel_id} p="md" shadow="xs" withBorder>
-            <Stack>
-              <Stack gap={"xs"}>
-                <Title order={3}>{value.type}</Title>
-                <Text size={"xs"}>{value.api_key}</Text>
+
+        <SimpleGrid cols={2}>
+          {channels.list.map((value) => (
+            <Paper key={value.channel_id} p="md" shadow="xs" withBorder>
+              <Stack>
+                <Stack gap={"xs"}>
+                  <Title order={3}>{value.type}</Title>
+                  <Text size={"xs"}>{value.api_key}</Text>
+                </Stack>
+                <Group gap={"xs"}>
+                  <Button
+                    onClick={() => {
+                      setChannel(value);
+                      open();
+                    }}
+                    rightSection={<IconPencil size={14} />}
+                    size={"xs"}
+                    variant={"light"}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      openDeleteModal(value.channel_id);
+                    }}
+                    color={"red"}
+                    rightSection={<IconTrash size={14} />}
+                    size={"xs"}
+                    variant={"light"}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    onClick={async () => {
+                      await channelsApi.getWebhook(
+                        projects.currentProject,
+                        value.channel_id,
+                      );
+                    }}
+                    color={"blue"}
+                    rightSection={<IconInfoCircle size={14} />}
+                    size={"xs"}
+                    variant={"light"}
+                  >
+                    Webhook info
+                  </Button>
+                  <Button
+                    onClick={async () => {
+                      await channelsApi.refreshWebhook(
+                        projects.currentProject,
+                        value.channel_id,
+                      );
+                    }}
+                    color={"blue"}
+                    rightSection={<IconRefresh size={14} />}
+                    size={"xs"}
+                    variant={"light"}
+                  >
+                    Refresh webhook
+                  </Button>
+                </Group>
               </Stack>
-              <Group gap={"xs"}>
-                <Button
-                  onClick={() => {
-                    setChannel(value);
-                    open();
-                  }}
-                  rightSection={<IconPencil size={14} />}
-                  size={"xs"}
-                  variant={"light"}
-                >
-                  Edit
-                </Button>
-                <Button
-                  onClick={() => {
-                    openDeleteModal(value.channel_id);
-                  }}
-                  color={"red"}
-                  rightSection={<IconTrash size={14} />}
-                  size={"xs"}
-                  variant={"light"}
-                >
-                  Delete
-                </Button>
-                <Button
-                  onClick={async () => {
-                    await channelsApi.getWebhook(
-                      projects.currentProject,
-                      value.channel_id,
-                    );
-                  }}
-                  color={"blue"}
-                  rightSection={<IconInfoCircle size={14} />}
-                  size={"xs"}
-                  variant={"light"}
-                >
-                  Webhook info
-                </Button>
-                <Button
-                  onClick={async () => {
-                    await channelsApi.refreshWebhook(
-                      projects.currentProject,
-                      value.channel_id,
-                    );
-                  }}
-                  color={"blue"}
-                  rightSection={<IconRefresh size={14} />}
-                  size={"xs"}
-                  variant={"light"}
-                >
-                  Refresh webhook
-                </Button>
-              </Group>
-            </Stack>
-          </Paper>
-        ))}
+            </Paper>
+          ))}
+        </SimpleGrid>
       </Stack>
 
       <Modal
