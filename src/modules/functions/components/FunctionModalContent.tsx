@@ -14,22 +14,21 @@ import React, { useEffect } from "react";
 const INITIAL_VALUES: UpdateFunctionForm = {
   description: "",
   function_data: "",
-  function_id: "",
   function_type: "",
   name: "",
   parameters: "",
-  project_id: "",
 };
 
 type ExcludedData = Omit<UpdateFunction, "function_data" | "parameters">;
 
-interface UpdateFunctionForm extends ExcludedData {
+export interface UpdateFunctionForm extends ExcludedData {
   function_data: string;
   parameters: string;
 }
 
 export function FunctionModalContent(properties: {
   initialValues?: UpdateFunction;
+  isGenerated?: boolean;
   onSubmit(values: UpdateFunctionForm): void;
 }) {
   const form = useForm<UpdateFunctionForm>({
@@ -51,6 +50,9 @@ export function FunctionModalContent(properties: {
           null,
           2,
         ),
+        ...(properties.isGenerated && {
+          function_type: "API_CALL",
+        }),
       });
     } else {
       form.setValues(INITIAL_VALUES);
@@ -60,15 +62,17 @@ export function FunctionModalContent(properties: {
   return (
     <form onSubmit={form.onSubmit((values) => properties.onSubmit(values))}>
       <Stack w={"100%"}>
-        <SegmentedControl
-          data={[
-            { label: "API call", value: "API_CALL" },
-            { label: "Get knowledge", value: "GET_KNOWLEDGE" },
-            { label: "Change field", value: "CHANGE_CLIENT_FIELD" },
-            { label: "Get field", value: "GET_CLIENT_FIELD" },
-          ]}
-          {...form.getInputProps("function_type")}
-        />
+        {properties.isGenerated ? null : (
+          <SegmentedControl
+            data={[
+              { label: "API call", value: "API_CALL" },
+              { label: "Get knowledge", value: "GET_KNOWLEDGE" },
+              { label: "Change field", value: "CHANGE_CLIENT_FIELD" },
+              { label: "Get field", value: "GET_CLIENT_FIELD" },
+            ]}
+            {...form.getInputProps("function_type")}
+          />
+        )}
 
         <TextInput label="Name" {...form.getInputProps("name")} />
 

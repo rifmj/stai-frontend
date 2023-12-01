@@ -8,7 +8,10 @@ export interface FunctionsListItem {
   project_id: string;
 }
 
-export type CreateFunction = Exclude<FunctionsListItem, "function_id">;
+export type CreateFunction = Omit<
+  FunctionsListItem,
+  "function_id" | "project_id"
+>;
 export type UpdateFunction = CreateFunction;
 
 export type FunctionsListResponse = FunctionsListItem[];
