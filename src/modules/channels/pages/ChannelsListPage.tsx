@@ -143,13 +143,14 @@ export const ChannelsListPageView = () => {
         <ChannelModalContent
           onSubmit={async (values) => {
             await (channel
-              ? channelsApi.create(projects.currentProject, values)
-              : channelsApi.update(
+              ? channelsApi.update(
                   projects.currentProject,
                   channel.channel_id,
                   values,
-                ));
+                )
+              : channelsApi.create(projects.currentProject, values));
             setChannel(null);
+            await channels.mutate();
             close();
           }}
           initialValues={channel}
