@@ -24,6 +24,16 @@ export default class ChatsApi {
     return data.data;
   }
 
+  async getMessageTrace(projectId: string, chatId: string, messageId: string) {
+    const data = await this.deps.api.get<{
+      spans: {
+        attributes: any;
+        span_id: string;
+      }[];
+    }>(`projects/${projectId}/chats/${chatId}/messages/${messageId}/trace`);
+    return data.data;
+  }
+
   async getMessages(projectId: string, chatId: string) {
     const data = await this.deps.api.get<ChatMessagesListItem[]>(
       `projects/${projectId}/chats/${chatId}/messages`,

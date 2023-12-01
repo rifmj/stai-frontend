@@ -1,12 +1,16 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
 import { useChatsApi } from "@/modules/chats/api";
-import { useChatMessages } from "@/modules/chats/hooks";
+import { useChatMessageTrace, useChatMessages } from "@/modules/chats/hooks";
 import { formatDate } from "@/sdk/utils/date";
 import {
   Alert,
+  Badge,
   Box,
   Button,
+  Center,
   Group,
+  JsonInput,
+  Loader,
   Paper,
   Stack,
   Text,
@@ -14,19 +18,86 @@ import {
   Timeline,
   Title,
 } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {
+  IconHttpTrace,
   IconInfoCircle,
   IconInputAi,
   IconMessage,
   IconPlus,
   IconRefresh,
+  IconReportAnalytics,
   IconTrash,
   IconUser,
 } from "@tabler/icons-react";
 import { observer } from "mobx-react";
 import React from "react";
 import { useParams } from "react-router-dom";
+
+const ChatMessageTrace = (properties: {
+  chatId: string;
+  messageId: string;
+}) => {
+  const { projects } = useMobXStore();
+  const trace = useChatMessageTrace(
+    projects.currentProject,
+    properties.chatId,
+    properties.messageId,
+  );
+  return (
+    <Stack>
+      {trace.list.map((value, index, array) => (
+        <Paper>
+          <Stack gap={"md"}>
+            <Group justify={"space-between"}>
+              <Stack>
+                {value.attributes.start &&
+                array[index - 1]?.attributes?.start ? (
+                  <Text c={"dimmed"} size={"xs"}>
+                    <strong>+</strong>{" "}
+                    {value.attributes.start -
+                      array[index - 1]?.attributes.start}{" "}
+                    ms
+                  </Text>
+                ) : null}
+                <Text c={"dimmed"} size={"xs"}>
+                  <strong>ID</strong>: {value.span_id}
+                </Text>
+              </Stack>
+              <Group gap={"xs"}>
+                {Object.keys(value.attributes)
+                  .filter(
+                    (value) => !["duration", "end", "start"].includes(value),
+                  )
+                  .map((value) => (
+                    <Badge color={"grape"} size="xs" variant="light">
+                      {value}
+                    </Badge>
+                  ))}
+              </Group>
+            </Group>
+            {/*@ts-ignore*/}
+            <JsonInput
+              autosize
+              maxRows={12}
+              minRows={3}
+              value={JSON.stringify(value.attributes, null, 2)}
+            />
+            <Stack gap={4}>
+              {value.attributes.duration ? (
+                <Text c={"dimmed"} size={"xs"}>
+                  <strong>Duration</strong>:{" "}
+                  {Number.parseFloat(value.attributes.duration)} ms
+                </Text>
+              ) : null}
+            </Stack>
+          </Stack>
+        </Paper>
+      ))}
+    </Stack>
+  );
+};
 
 export const ChatPageView = () => {
   const { projects } = useMobXStore();
@@ -125,9 +196,30 @@ export const ChatPageView = () => {
               >
                 {value.role}
               </Text>
-              <Text c="dimmed" size="xs">
-                {formatDate(value.datetime)}
-              </Text>
+              <Group>
+                <Button
+                  onClick={() => {
+                    modals.open({
+                      children: (
+                        <ChatMessageTrace
+                          chatId={chatId}
+                          messageId={value.message_id}
+                        />
+                      ),
+                      id: "trace",
+                      title: "Trace",
+                    });
+                  }}
+                  rightSection={<IconReportAnalytics size={14} />}
+                  size={"xs"}
+                  variant={"light"}
+                >
+                  Trace
+                </Button>
+                <Text c="dimmed" size="xs">
+                  {formatDate(value.datetime)}
+                </Text>
+              </Group>
             </Group>
             <Paper p="xs" shadow="sm" withBorder>
               <Text size="sm">{value.content}</Text>
