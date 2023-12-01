@@ -1,20 +1,25 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
+import { useChatsApi } from "@/modules/chats/api";
 import { useChatMessages } from "@/modules/chats/hooks";
 import { formatDate } from "@/sdk/utils/date";
 import {
   Alert,
+  Box,
   Button,
   Group,
   Paper,
   Stack,
   Text,
+  TextInput,
   Timeline,
   Title,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import {
   IconInfoCircle,
   IconInputAi,
   IconMessage,
+  IconPlus,
   IconRefresh,
   IconUser,
 } from "@tabler/icons-react";
@@ -25,8 +30,11 @@ import { useParams } from "react-router-dom";
 export const ChatPageView = () => {
   const { projects } = useMobXStore();
 
+  const chatsApi = useChatsApi();
   const { chatId } = useParams();
   const messages = useChatMessages(projects.currentProject, chatId);
+
+  const [messageText, setMessageText] = React.useState("");
 
   return (
     <Stack gap={"lg"}>
@@ -43,6 +51,42 @@ export const ChatPageView = () => {
       </Group>
 
       <Timeline bulletSize={24} lineWidth={2}>
+        <Group>
+          <Box style={{ flex: 1 }}>
+            <TextInput
+              onChange={(event) => setMessageText(event.target.value)}
+              placeholder={"Message text..."}
+              value={messageText}
+            />
+          </Box>
+          <Button
+            onClick={async () => {
+              try {
+                await chatsApi.sendMessage(
+                  projects.currentProject,
+                  chatId,
+                  messageText,
+                );
+                notifications.show({
+                  color: "teal",
+                  message: "Message sent",
+                  title: "Success! ✅",
+                });
+              } catch {
+                notifications.show({
+                  color: "red",
+                  message: "",
+                  title: "Error",
+                });
+              }
+            }}
+            leftSection={<IconPlus />}
+            size={"xs"}
+          >
+            Send
+          </Button>
+        </Group>
+
         {messages.list.map((value) => (
           <Timeline.Item
             bullet={

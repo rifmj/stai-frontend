@@ -23,6 +23,14 @@ export default class ChatsApi {
     );
     return data.data;
   }
+
+  async sendMessage(projectId: string, chatId: string, text: string) {
+    const data = await this.deps.api.post<ChatMessagesListItem[]>(
+      `projects/${projectId}/chats/${chatId}/messages/send`,
+      { text },
+    );
+    return data.data;
+  }
 }
 
 export const useChatsApi = () => {
