@@ -15,6 +15,7 @@ import {
   Loader,
   Modal,
   Paper,
+  SimpleGrid,
   Stack,
   Text,
   Title,
@@ -157,49 +158,51 @@ export const FunctionsListPageView = () => {
             variant="light"
           />
         ) : null}
-        {functions.list.map((value) => (
-          <Paper key={value.function_id} p="md" shadow="xs" withBorder>
-            <Stack>
-              <Stack gap={"xs"}>
-                <Title order={4}>{value.name}</Title>
-                <Text size={"sm"}>{value.description}</Text>
-                <Text c={"dimmed"} size={"xs"}>
-                  {value.function_type}
-                </Text>
-              </Stack>
-              <Group>
-                <Button
-                  onClick={() => {
-                    setItem(value);
-                    open();
-                  }}
-                  color={"teal"}
-                  rightSection={<IconPencil size={14} />}
-                  size={"xs"}
-                  variant={"light"}
-                >
-                  Edit
-                </Button>
+        <SimpleGrid cols={2}>
+          {functions.list.map((value) => (
+            <Paper key={value.function_id} p="md" shadow="xs" withBorder>
+              <Stack>
+                <Stack gap={"xs"}>
+                  <Title order={4}>{value.name}</Title>
+                  <Text size={"sm"}>{value.description}</Text>
+                  <Text c={"dimmed"} size={"xs"}>
+                    {value.function_type}
+                  </Text>
+                </Stack>
+                <Group>
+                  <Button
+                    onClick={() => {
+                      setItem(value);
+                      open();
+                    }}
+                    color={"teal"}
+                    rightSection={<IconPencil size={14} />}
+                    size={"xs"}
+                    variant={"light"}
+                  >
+                    Edit
+                  </Button>
 
-                <Button
-                  onClick={async () => {
-                    await functionsApi.delete(
-                      projects.currentProject,
-                      item.function_id,
-                    );
-                    await functions.mutate();
-                  }}
-                  color={"red"}
-                  rightSection={<IconTrash size={14} />}
-                  size={"xs"}
-                  variant={"light"}
-                >
-                  Delete
-                </Button>
-              </Group>
-            </Stack>
-          </Paper>
-        ))}
+                  <Button
+                    onClick={async () => {
+                      await functionsApi.delete(
+                        projects.currentProject,
+                        item.function_id,
+                      );
+                      await functions.mutate();
+                    }}
+                    color={"red"}
+                    rightSection={<IconTrash size={14} />}
+                    size={"xs"}
+                    variant={"light"}
+                  >
+                    Delete
+                  </Button>
+                </Group>
+              </Stack>
+            </Paper>
+          ))}
+        </SimpleGrid>
       </Stack>
 
       <Modal
