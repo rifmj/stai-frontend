@@ -21,6 +21,7 @@ import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 
 const INITIAL_VALUES: SettingsItem = {
+  greeting: "",
   max_tokens: 0,
   model: "",
   prompt: "",
@@ -117,6 +118,14 @@ export const SettingsPageView = () => {
             <TextInput
               label="Max tokens"
               {...form.getInputProps("max_tokens")}
+            />
+
+            <Textarea
+              autosize
+              label="Greeting"
+              maxRows={12}
+              minRows={4}
+              {...form.getInputProps("greeting")}
             />
 
             <Textarea

@@ -21,6 +21,7 @@ import {
   IconMessage,
   IconPlus,
   IconRefresh,
+  IconTrash,
   IconUser,
 } from "@tabler/icons-react";
 import { observer } from "mobx-react";
@@ -40,14 +41,28 @@ export const ChatPageView = () => {
     <Stack gap={"lg"}>
       <Group justify="space-between">
         <Title order={4}>Chat</Title>
-        <Button
-          onClick={() => messages.mutate()}
-          rightSection={<IconRefresh size={14} />}
-          size={"xs"}
-          variant={"light"}
-        >
-          Refresh
-        </Button>
+        <Group>
+          <Button
+            onClick={async () => {
+              await chatsApi.clearChat(projects.currentProject, chatId);
+              await messages.mutate();
+            }}
+            color={"orange"}
+            rightSection={<IconTrash size={14} />}
+            size={"xs"}
+            variant={"light"}
+          >
+            Clear
+          </Button>
+          <Button
+            onClick={() => messages.mutate()}
+            rightSection={<IconRefresh size={14} />}
+            size={"xs"}
+            variant={"light"}
+          >
+            Refresh
+          </Button>
+        </Group>
       </Group>
 
       <Timeline bulletSize={24} lineWidth={2}>

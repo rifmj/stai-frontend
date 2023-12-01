@@ -1,4 +1,5 @@
 export interface SettingsItem {
+  greeting: string;
   max_tokens: number;
   model: string;
   prompt: string;

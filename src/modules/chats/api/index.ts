@@ -10,6 +10,13 @@ export default class ChatsApi {
     },
   ) {}
 
+  async clearChat(projectId: string, chatId: string) {
+    const data = await this.deps.api.post<ChatMessagesListItem[]>(
+      `projects/${projectId}/chats/${chatId}/messages/clear`,
+    );
+    return data.data;
+  }
+
   async get(projectId: string) {
     const data = await this.deps.api.get<ChatsListResponse>(
       `projects/${projectId}/chats`,
