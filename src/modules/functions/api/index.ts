@@ -34,12 +34,7 @@ export default class FunctionsApi {
     const response = await this.deps.api.post<any>(
       `projects/${projectId}/functions/generate?query=${query}`,
     );
-    const stringData = response.data.choices[0].message.content;
-    try {
-      return JSON.parse(stringData);
-    } catch (error) {
-      throw new Error(error);
-    }
+    return response.data?.data;
   }
 
   async get(projectId: string, id: string) {
