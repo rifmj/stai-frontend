@@ -72,6 +72,7 @@ export const FunctionsListPageView = () => {
         <IconWand stroke={1.5} style={{ height: rem(20), width: rem(20) }} />
       ),
       onClick: async () => {
+        if (!functionDefinition) return;
         modals.open({
           children: (
             <Center>
