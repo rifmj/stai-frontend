@@ -97,6 +97,8 @@ export const FunctionsListPageView = () => {
           );
           const generated = {
             description: response.description,
+            documentation: response.documentation,
+            examples: response.examples,
             function_data: response.function_data,
             function_type: "API_CALL",
             name: response.name,

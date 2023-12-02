@@ -18,7 +18,10 @@ export default class FunctionsApi {
   async create(projectId: string, data: CreateFunction) {
     const response = await this.deps.api.post<FunctionResponse>(
       `projects/${projectId}/functions`,
-      data,
+      {
+        ...data,
+        examples: data.examples ?? [],
+      },
     );
     return response.data;
   }

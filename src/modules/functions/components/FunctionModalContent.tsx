@@ -13,6 +13,8 @@ import React, { useEffect } from "react";
 
 const INITIAL_VALUES: UpdateFunctionForm = {
   description: "",
+  documentation: "",
+  examples: [],
   function_data: "",
   function_type: "",
   name: "",

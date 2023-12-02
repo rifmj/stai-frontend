@@ -1,5 +1,7 @@
 export interface FunctionsListItem {
-  description: string;
+  description?: string;
+  documentation: string;
+  examples?: string[];
   function_data: object;
   function_id: string;
   function_type: string;
