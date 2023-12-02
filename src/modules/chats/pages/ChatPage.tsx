@@ -1,18 +1,17 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
 import { useChatsApi } from "@/modules/chats/api";
-import { useChatMessageTrace, useChatMessages } from "@/modules/chats/hooks";
+import { ChatMessageTrace } from "@/modules/chats/components/ChatMessageTrace";
+import { useChatMessages } from "@/modules/chats/hooks";
 import { formatDate } from "@/sdk/utils/date";
 import {
   Alert,
-  Badge,
   Box,
   Button,
-  Center,
   Group,
-  JsonInput,
-  Loader,
+  Notification,
   Paper,
   Stack,
+  Table,
   Text,
   TextInput,
   Timeline,
@@ -21,10 +20,8 @@ import {
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {
-  IconHttpTrace,
   IconInfoCircle,
   IconInputAi,
-  IconMessage,
   IconPlus,
   IconRefresh,
   IconReportAnalytics,
@@ -33,90 +30,7 @@ import {
 } from "@tabler/icons-react";
 import { observer } from "mobx-react";
 import React from "react";
-import { JSONTree } from "react-json-tree";
-import createStylingFromTheme from "react-json-tree/lib/types/createStylingFromTheme";
 import { useParams } from "react-router-dom";
-
-const ChatMessageTrace = (properties: {
-  chatId: string;
-  messageId: string;
-}) => {
-  const { projects } = useMobXStore();
-  const trace = useChatMessageTrace(
-    projects.currentProject,
-    properties.chatId,
-    properties.messageId,
-  );
-  return (
-    <Stack>
-      {trace.list.map((value, index, array) => (
-        <Paper>
-          <Stack gap={"md"}>
-            <Group justify={"space-between"}>
-              <Stack>
-                {value.attributes.start &&
-                array[index - 1]?.attributes?.start ? (
-                  <Text c={"dimmed"} size={"xs"}>
-                    <strong>+</strong>{" "}
-                    {value.attributes.start -
-                      array[index - 1]?.attributes.start}{" "}
-                    ms
-                  </Text>
-                ) : null}
-                <Text c={"dimmed"} size={"xs"}>
-                  <strong>ID</strong>: {value.span_id}
-                </Text>
-              </Stack>
-              <Group gap={"xs"}>
-                {Object.keys(value.attributes)
-                  .filter(
-                    (value) => !["duration", "end", "start"].includes(value),
-                  )
-                  .map((value) => (
-                    <Badge color={"grape"} size="xs" variant="light">
-                      {value}
-                    </Badge>
-                  ))}
-              </Group>
-            </Group>
-            {/*@ts-ignore*/}
-            <JSONTree
-              theme={{
-                author: "wimer hazenberg (http://www.monokai.nl)",
-                base00: "#272822",
-                base01: "#383830",
-                base02: "#49483e",
-                base03: "#75715e",
-                base04: "#a59f85",
-                base05: "#f8f8f2",
-                base06: "#f5f4f1",
-                base07: "#f9f8f5",
-                base08: "#f92672",
-                base09: "#fd971f",
-                base0A: "#f4bf75",
-                base0B: "#a6e22e",
-                base0C: "#a1efe4",
-                base0D: "#66d9ef",
-                base0E: "#ae81ff",
-                base0F: "#cc6633",
-                scheme: "monokai",
-              }}
-              data={value.attributes}
-            />
-            <Stack gap={4}>
-              {value.attributes.duration ? (
-                <Text c={"dimmed"} size={"xs"}>
-                  <strong>Duration</strong>:{" "}
-                  {Number.parseFloat(value.attributes.duration)} ms
-                </Text>
-              ) : null}
-            </Stack>
-          </Stack>
-        </Paper>
-      ))}
-    </Stack>
-  );
-};
 
 export const ChatPageView = () => {
   const { projects } = useMobXStore();
@@ -208,7 +122,9 @@ export const ChatPageView = () => {
                 gradient={
                   value.role === "User"
                     ? { deg: 0, from: "cyan", to: "teal" }
-                    : { deg: 0, from: "lime", to: "green" }
+                    : value.role === "Tool"
+                      ? { deg: 0, from: "red", to: "pink" }
+                      : { deg: 0, from: "lime", to: "green" }
                 }
                 size="sm"
                 variant="gradient"
@@ -216,32 +132,77 @@ export const ChatPageView = () => {
                 {value.role}
               </Text>
               <Group>
-                <Button
-                  onClick={() => {
-                    modals.open({
-                      children: (
-                        <ChatMessageTrace
-                          chatId={chatId}
-                          messageId={value.message_id}
-                        />
-                      ),
-                      id: "trace",
-                      title: "Trace",
-                    });
-                  }}
-                  rightSection={<IconReportAnalytics size={14} />}
-                  size={"xs"}
-                  variant={"light"}
-                >
-                  Trace
-                </Button>
+                {value.role === "User" ? (
+                  <Button
+                    onClick={() => {
+                      modals.open({
+                        children: (
+                          <ChatMessageTrace
+                            chatId={chatId}
+                            messageId={value.message_id}
+                          />
+                        ),
+                        id: "trace",
+                        title: "Trace",
+                      });
+                    }}
+                    rightSection={<IconReportAnalytics size={14} />}
+                    size={"xs"}
+                    variant={"light"}
+                  >
+                    Trace
+                  </Button>
+                ) : null}
                 <Text c="dimmed" size="xs">
                   {formatDate(value.datetime)}
                 </Text>
               </Group>
             </Group>
             <Paper p="xs" shadow="sm" withBorder>
-              <Text size="sm">{value.content}</Text>
+              <Stack gap={"sm"}>
+                {value.name || value.tool_call_id ? (
+                  <Group justify={"space-between"}>
+                    {value.name ? <Title order={5}>{value.name}</Title> : null}
+                    <Text c={"dimmed"} size="xs">
+                      {value.tool_call_id}
+                    </Text>
+                  </Group>
+                ) : null}
+                {value.content ? <Text size="sm">{value.content}</Text> : null}
+                {value.tool_calls?.length > 0 ? (
+                  <Stack>
+                    {value.tool_calls?.map((value) => {
+                      const argumentsObjectString = value.function.arguments;
+                      const parsed = JSON.parse(argumentsObjectString);
+                      return (
+                        <Notification
+                          color="pink"
+                          title={value.function.name}
+                          withBorder
+                          withCloseButton={false}
+                        >
+                          <Stack>
+                            <Text color={"dimmed"} size={"xs"}>
+                              {value.id}
+                            </Text>
+                            <Table
+                              data={{
+                                body: Object.keys(parsed).map((key) => [
+                                  key,
+                                  parsed[key],
+                                ]),
+                              }}
+                              striped
+                              withColumnBorders
+                              withTableBorder
+                            />
+                          </Stack>
+                        </Notification>
+                      );
+                    })}
+                  </Stack>
+                ) : null}
+              </Stack>
             </Paper>
           </Timeline.Item>
         ))}

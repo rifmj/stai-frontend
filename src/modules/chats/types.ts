@@ -15,7 +15,10 @@ export interface ChatMessagesListItem {
   content: string;
   datetime: string;
   message_id: string;
+  name: string;
   role: string;
+  tool_call_id: string;
+  tool_calls: any;
 }
 
 export type ChatsListResponse = ChatsListItem[];
