@@ -7,6 +7,7 @@ import { SignUpPage } from "@/modules/auth/pages/SignUpPage";
 import { ChannelsListPage } from "@/modules/channels/pages/ChannelsListPage";
 import { ChatPageView } from "@/modules/chats/pages/ChatPage";
 import { ChatsListPage } from "@/modules/chats/pages/ChatsListPage";
+import { ClientsListPage } from "@/modules/clients/pages/ClientsListPage";
 import { FunctionsListPage } from "@/modules/functions/pages/FunctionsListPage";
 import { KnowledgeBaseListPage } from "@/modules/knowledge-base/pages/KnowledgeBaseListPage";
 import { KnowledgeBasePage } from "@/modules/knowledge-base/pages/KnowledgeBasePage";
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
       {
         element: <ProjectsListPage />,
         path: "/projects",
+      },
+      {
+        element: <ClientsListPage />,
+        path: "/clients",
       },
       {
         element: <KnowledgeBasePage />,

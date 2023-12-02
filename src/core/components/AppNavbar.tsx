@@ -6,6 +6,7 @@ import {
   IconMessages,
   IconPlugConnected,
   IconSettings,
+  IconUser,
 } from "@tabler/icons-react";
 import cx from "clsx";
 import React from "react";
@@ -48,6 +49,13 @@ export const AppNavbar = () => {
         label="Knowledge base"
         leftSection={<IconBrain size="1rem" stroke={1.5} />}
         to={"/kb"}
+      />
+      <NavLink
+        active={window.location.pathname.startsWith("/clients")}
+        component={RRNavLink}
+        label="Clients"
+        leftSection={<IconUser size="1rem" stroke={1.5} />}
+        to={"/clients"}
       />
       <NavLink
         active={window.location.pathname === "/statistics"}

@@ -2,7 +2,7 @@ import Bootstrap from "@/core/Bootstrap";
 import Config from "@/core/ConfigStore";
 import { IStore } from "@/core/store/types";
 import UserStore from "@/core/user/User.store";
-import ProjectsStore from "@/modules/projects/Projects.store";
+import ProjectsStore from "@/modules/projects/store";
 import Api from "@/sdk/services/Api";
 import logger from "@/sdk/utils/Logger";
 
