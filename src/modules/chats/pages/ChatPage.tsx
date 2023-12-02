@@ -20,6 +20,7 @@ import {
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {
+  IconHammer,
   IconInfoCircle,
   IconInputAi,
   IconPlus,
@@ -111,6 +112,8 @@ export const ChatPageView = () => {
             bullet={
               value.role === "User" ? (
                 <IconUser size={12} />
+              ) : value.role === "Tool" ? (
+                <IconHammer size={12} />
               ) : (
                 <IconInputAi size={12} />
               )
