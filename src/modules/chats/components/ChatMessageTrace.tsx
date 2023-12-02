@@ -128,15 +128,20 @@ export const ChatMessageTrace = (properties: {
     );
     if (tags.length === 0) return [];
     const tag = tags[0];
+    const firstItem = array[0];
+    const firstStart = firstItem.attributes.start;
     const previousStart = array[index - 1] ?? array[0];
+    const delta = value.attributes.start - previousStart.attributes.start;
     return [
       {
         data: value.attributes,
-        delta: value.attributes.start - previousStart.attributes.start,
+        delta,
         duration: value.attributes.duration,
         end: value.attributes.end,
+        end_relative: value.attributes.end - firstStart,
         id: value.span_id,
         start: value.attributes.start,
+        start_relative: value.attributes.start - firstItem.attributes.start,
         type: tag,
       },
     ];
@@ -160,10 +165,11 @@ export const ChatMessageTrace = (properties: {
       <Tabs defaultValue="overall">
         <Tabs.List>
           <Tabs.Tab value="overall">Overall</Tabs.Tab>
+          <Tabs.Tab value="waterfall">Waterfall</Tabs.Tab>
           <Tabs.Tab value="raw">Raw</Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel pt={12} value="overall">
+        <Tabs.Panel pt={12} value="waterfall">
           <Box>
             <ReactEChartsCore
               option={{
@@ -171,8 +177,26 @@ export const ChatMessageTrace = (properties: {
                 series: [
                   {
                     data: spansWithDuration.map((value) =>
-                      value.duration.toFixed(2),
+                      value.start_relative.toFixed(2),
                     ),
+                    emphasis: {
+                      itemStyle: {
+                        borderColor: "transparent",
+                        color: "transparent",
+                      },
+                    },
+                    itemStyle: {
+                      borderColor: "transparent",
+                      color: "transparent",
+                    },
+                    stack: "Total",
+                    type: "bar",
+                  },
+                  {
+                    data: spansWithDuration.map((value) =>
+                      value.end_relative.toFixed(2),
+                    ),
+                    stack: "Total",
                     type: "bar",
                   },
                 ],
@@ -180,8 +204,11 @@ export const ChatMessageTrace = (properties: {
                   axisPointer: {
                     type: "shadow",
                   },
+                  formatter: (value) =>
+                    `<strong>${value[1].name}</strong>` +
+                    "<br/>" +
+                    `${value[1].value} ms`,
                   trigger: "axis",
-                  valueFormatter: (value) => `${value} ms`,
                 },
                 xAxis: {
                   type: "value",
@@ -198,7 +225,8 @@ export const ChatMessageTrace = (properties: {
               notMerge={true}
             />
           </Box>
-
+        </Tabs.Panel>
+        <Tabs.Panel pt={12} value="overall">
           <Stack gap={0}>
             {spans.map((value) => (
               <Stack gap={4}>
