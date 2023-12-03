@@ -171,7 +171,16 @@ export const ChatPageView = () => {
                     </Text>
                   </Group>
                 ) : null}
-                {value.content ? <Text size="sm">{value.content}</Text> : null}
+                {value.content ? (
+                  <Text
+                    style={{
+                      whiteSpace: "pre-line",
+                    }}
+                    size="sm"
+                  >
+                    {value.content}
+                  </Text>
+                ) : null}
                 {value.tool_calls?.length > 0 ? (
                   <Stack>
                     {value.tool_calls?.map((value) => {
