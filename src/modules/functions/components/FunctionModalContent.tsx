@@ -68,6 +68,7 @@ export function FunctionModalContent(properties: {
           <SegmentedControl
             data={[
               { label: "API call", value: "API_CALL" },
+              { label: "AI call", value: "AI_CALL" },
               { label: "Get knowledge", value: "GET_KNOWLEDGE" },
               { label: "Change field", value: "CHANGE_CLIENT_FIELD" },
               { label: "Get field", value: "GET_CLIENT_FIELD" },

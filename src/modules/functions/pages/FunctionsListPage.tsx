@@ -189,7 +189,7 @@ export const FunctionsListPageView = () => {
                     onClick={async () => {
                       await functionsApi.delete(
                         projects.currentProject,
-                        item.function_id,
+                        value.function_id,
                       );
                       await functions.mutate();
                     }}

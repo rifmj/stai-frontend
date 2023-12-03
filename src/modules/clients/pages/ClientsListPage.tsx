@@ -15,6 +15,9 @@ import {
   Paper,
   SimpleGrid,
   Stack,
+  Table,
+  TableData,
+  Text,
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -40,6 +43,42 @@ export const ClientsListPageView = () => {
     close();
   };
 
+  const rows = clients.list.map((client) => (
+    <Table.Tr key={client.client_id}>
+      <Table.Td>{client.client_id}</Table.Td>
+      <Table.Td>{client.name}</Table.Td>
+      <Table.Td>{client.external_id || "N/A"}</Table.Td>
+      <Table.Td>
+        <Group>
+          <Button
+            onClick={() => {
+              setItem(client);
+              open();
+            }}
+            color="teal"
+            size="xs"
+          >
+            <IconPencil size={14} />
+          </Button>
+          <Button
+            onClick={async () => {
+              await clientsApi.delete(
+                projects.currentProject,
+                client.client_id,
+              );
+              await clients.mutate();
+            }}
+            color={"red"}
+            size={"xs"}
+            variant={"light"}
+          >
+            <IconTrash size={14} />
+          </Button>
+        </Group>
+      </Table.Td>
+    </Table.Tr>
+  ));
+
   return (
     <Stack gap={"lg"}>
       <Group justify="space-between">
@@ -53,44 +92,24 @@ export const ClientsListPageView = () => {
         {!clients.isLoading && !clients.error && clients.list.length === 0 ? (
           <Alert color="indigo" title="Nothing found" variant="light" />
         ) : null}
-        <SimpleGrid cols={2}>
-          {clients.list.map((client) => (
-            <Paper key={client.client_id} p="md" shadow="xs" withBorder>
-              <Stack>
-                <Title order={4}>{client.name}</Title>
-                <Group>
-                  <Button
-                    onClick={() => {
-                      setItem(client);
-                      open();
-                    }}
-                    color={"teal"}
-                    rightSection={<IconPencil size={14} />}
-                    size={"xs"}
-                    variant={"light"}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    onClick={async () => {
-                      await clientsApi.delete(
-                        projects.currentProject,
-                        client.client_id,
-                      );
-                      await clients.mutate();
-                    }}
-                    color={"red"}
-                    rightSection={<IconTrash size={14} />}
-                    size={"xs"}
-                    variant={"light"}
-                  >
-                    Delete
-                  </Button>
-                </Group>
-              </Stack>
-            </Paper>
-          ))}
-        </SimpleGrid>
+
+        <Stack>
+          {!clients.isLoading && !clients.error && clients.list.length === 0 ? (
+            <Alert color="indigo" title="Nothing found" variant="light" />
+          ) : (
+            <Table>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Client ID</Table.Th>
+                  <Table.Th>Name</Table.Th>
+                  <Table.Th>External ID</Table.Th>
+                  <Table.Th>Actions</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>{rows}</Table.Tbody>
+            </Table>
+          )}
+        </Stack>
       </Stack>
 
       <Modal
