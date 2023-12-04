@@ -1,5 +1,6 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
 import { useChatMessageTrace } from "@/modules/chats/hooks";
+import { buildSpansTree } from "@/modules/chats/utils";
 import {
   Badge,
   Box,
@@ -10,6 +11,7 @@ import {
   Stack,
   Tabs,
   Text,
+  Title,
   Tooltip,
 } from "@mantine/core";
 import {
@@ -23,6 +25,10 @@ import {
 import {
   // LineChart,
   BarChart,
+  PieChart,
+  SunburstChart,
+  TreeChart,
+  TreemapChart,
   // PieChart,
   // ScatterChart,
   // RadarChart,
@@ -94,7 +100,11 @@ echarts.use([
   TooltipComponent,
   GridComponent,
   BarChart,
+  TreemapChart,
+  SunburstChart,
+  TreeChart,
   CanvasRenderer,
+  PieChart,
 ]);
 
 const filterKeys = (value) => !["duration", "end", "start"].includes(value);
@@ -123,11 +133,6 @@ export const ChatMessageTrace = (properties: {
     properties.messageId,
   );
   const spans = trace.list.flatMap((value, index, array) => {
-    const tags = Object.keys(value.attributes).filter((value) =>
-      filterKeys(value),
-    );
-    if (tags.length === 0) return [];
-    const tag = tags[0];
     const firstItem = array[0];
     const firstStart = firstItem.attributes.start;
     const previousStart = array[index - 1] ?? array[0];
@@ -136,16 +141,22 @@ export const ChatMessageTrace = (properties: {
       {
         data: value.attributes,
         delta,
-        duration: value.attributes.duration,
+        duration: value.attributes.end
+          ? value.attributes.end - value.attributes.start
+          : 0,
         end: value.attributes.end,
         end_relative: value.attributes.end - firstStart,
         id: value.span_id,
         start: value.attributes.start,
         start_relative: value.attributes.start - firstItem.attributes.start,
-        type: tag,
+        type: value.name,
       },
     ];
   });
+
+  const tree = buildSpansTree(trace.list);
+
+  console.info("12", spans, buildSpansTree(trace.list));
 
   const renderRow = (key: string, value: string) => (
     <Text size={"xs"}>
@@ -158,27 +169,76 @@ export const ChatMessageTrace = (properties: {
     return value ? renderRow(key, value) : null;
   };
 
-  const spansWithDuration = spans.filter((value) => value.duration > 5);
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  function getLevelOption() {
+    return [
+      {
+        itemStyle: {
+          borderWidth: 0,
+          gapWidth: 5,
+        },
+      },
+      {
+        itemStyle: {
+          gapWidth: 1,
+        },
+      },
+      {
+        colorSaturation: [0.35, 0.5],
+        itemStyle: {
+          borderColorSaturation: 0.6,
+          gapWidth: 1,
+        },
+      },
+    ];
+  }
 
   return (
     <Stack>
       <Tabs defaultValue="overall">
         <Tabs.List>
           <Tabs.Tab value="overall">Overall</Tabs.Tab>
-          <Tabs.Tab value="waterfall">Waterfall</Tabs.Tab>
+          <Tabs.Tab value="charts">Charts</Tabs.Tab>
           <Tabs.Tab value="raw">Raw</Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel pt={12} value="waterfall">
+        <Tabs.Panel pt={12} value="charts">
           <Box>
+            <Box h={320} w={480}>
+              <ReactEChartsCore
+                option={{
+                  series: [
+                    {
+                      center: ["40%", "50%"],
+                      data: tree,
+                      emphasis: {
+                        itemStyle: {
+                          shadowBlur: 10,
+                          shadowColor: "rgba(0, 0, 0, 0.5)",
+                          shadowOffsetX: 0,
+                        },
+                      },
+                      radius: "55%",
+                      type: "pie",
+                    },
+                  ],
+                  tooltip: {
+                    formatter: "{a} <br/>{b} : {c} ({d}%)",
+                    trigger: "item",
+                  },
+                }}
+                echarts={echarts}
+                lazyUpdate={true}
+                notMerge={true}
+              />
+            </Box>
+
             <ReactEChartsCore
               option={{
                 grid: { left: "33%" },
                 series: [
                   {
-                    data: spansWithDuration.map((value) =>
-                      value.start_relative.toFixed(2),
-                    ),
+                    data: spans.map((value) => value.start_relative.toFixed(2)),
                     emphasis: {
                       itemStyle: {
                         borderColor: "transparent",
@@ -193,9 +253,7 @@ export const ChatMessageTrace = (properties: {
                     type: "bar",
                   },
                   {
-                    data: spansWithDuration.map((value) =>
-                      value.end_relative.toFixed(2),
-                    ),
+                    data: spans.map((value) => value.end_relative.toFixed(2)),
                     stack: "Total",
                     type: "bar",
                   },
@@ -214,9 +272,7 @@ export const ChatMessageTrace = (properties: {
                   type: "value",
                 },
                 yAxis: {
-                  data: spansWithDuration.map(
-                    (value) => value.data?.mixed?.request ?? value.type,
-                  ),
+                  data: spans.map((value) => value.type),
                   type: "category",
                 },
               }}
@@ -260,7 +316,7 @@ export const ChatMessageTrace = (properties: {
                     <Group gap={4}>
                       <IconClockFilled size={12} />
                       <Text size={"xs"}>
-                        {Number.parseFloat(value.duration).toFixed(2)} ms
+                        {Number.parseFloat(value.duration as any).toFixed(2)} ms
                       </Text>
                     </Group>
                   </Tooltip>
@@ -279,31 +335,23 @@ export const ChatMessageTrace = (properties: {
           {trace.list.map((value, index, array) => (
             <Paper>
               <Stack gap={"md"}>
-                <Group justify={"space-between"}>
-                  <Stack>
-                    {value.attributes.start &&
-                    array[index - 1]?.attributes?.start ? (
-                      <Text c={"dimmed"} size={"xs"}>
-                        <strong>+</strong>{" "}
-                        {value.attributes.start -
-                          array[index - 1]?.attributes.start}{" "}
-                        ms
-                      </Text>
-                    ) : null}
-                    <Text c={"dimmed"} size={"xs"}>
-                      <strong>ID</strong>: {value.span_id}
-                    </Text>
-                  </Stack>
-                  <Group gap={"xs"}>
-                    {Object.keys(value.attributes)
-                      .filter((value) => filterKeys(value))
-                      .map((value) => (
-                        <Badge color={"grape"} size="xs" variant="light">
-                          {value}
-                        </Badge>
-                      ))}
-                  </Group>
+                <Group gap={"xs"}>
+                  <Title order={4}>{value.name}</Title>
                 </Group>
+                <Stack>
+                  {value.attributes.start &&
+                  array[index - 1]?.attributes?.start ? (
+                    <Text c={"dimmed"} size={"xs"}>
+                      <strong>+</strong>{" "}
+                      {value.attributes.start -
+                        array[index - 1]?.attributes.start}{" "}
+                      ms
+                    </Text>
+                  ) : null}
+                  <Text c={"dimmed"} size={"xs"}>
+                    <strong>ID</strong>: {value.span_id}
+                  </Text>
+                </Stack>
                 {/*@ts-ignore*/}
                 <JSONTree
                   theme={{

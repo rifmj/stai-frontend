@@ -28,7 +28,10 @@ export default class ChatsApi {
     const data = await this.deps.api.get<{
       spans: {
         attributes: any;
+        name: string;
+        parent_span_id: string;
         span_id: string;
+        trace_id: string;
       }[];
     }>(`projects/${projectId}/chats/${chatId}/messages/${messageId}/trace`);
     return data.data;
