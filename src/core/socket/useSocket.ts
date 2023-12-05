@@ -24,16 +24,26 @@ const useSocket = () => {
       });
     };
 
+    const onChatMessageUpdate = (data) => {
+      notifications.show({
+        color: "indigo",
+        message: data.messageText,
+        title: "New Message ✉️",
+      });
+    };
+
     // Subscribing to socket events
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("data-loader.update", onDataLoaderUpdate);
+    socket.on("chat.new-message", onChatMessageUpdate);
 
     // Cleanup function
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("data-loader.update", onDataLoaderUpdate);
+      socket.off("chat.new-message", onChatMessageUpdate);
     };
   }, []);
 
