@@ -1,8 +1,9 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
 import {
-  KnowledgeResponse,
+  KnowledgeForm,
   KnowledgeSearchListItem,
 } from "@/modules/knowledge-base/modules/knowledge/types";
+import { KnowledgeType } from "@/modules/knowledge-base/modules/origin/types";
 import {
   CreateKnowledgeBase,
   KnowledgeBaseListResponse,
@@ -22,6 +23,25 @@ export default class KnowledgeBaseApi {
     const response = await this.deps.api.post<KnowledgeBaseResponse>(
       `projects/${projectId}/knowledge-base`,
       data,
+    );
+    return response.data;
+  }
+
+  async extend(
+    projectId: string,
+    id: string,
+    data: { attributes: any; type: KnowledgeType },
+  ) {
+    const response = await this.deps.api.post<KnowledgeBaseResponse>(
+      `projects/${projectId}/knowledge-base/${id}/extend`,
+      data,
+    );
+    return response.data;
+  }
+
+  async extract(projectId: string, id: string, knowledgeOriginId: string) {
+    const response = await this.deps.api.post<KnowledgeBaseResponse>(
+      `projects/${projectId}/knowledge-base/${id}/extract?knowledgeOriginId=${knowledgeOriginId}`,
     );
     return response.data;
   }
@@ -51,6 +71,25 @@ export default class KnowledgeBaseApi {
     const response = await this.deps.api.put<KnowledgeBaseResponse>(
       `projects/${projectId}/knowledge-base/${id}`,
       data,
+    );
+    return response.data;
+  }
+
+  async upload(
+    projectId: string,
+    id: string,
+    data: { file: File; name: string; type: KnowledgeType },
+  ) {
+    const formData = new FormData();
+    formData.append("file", data.file);
+    formData.append("name", data.file.name);
+    formData.append("type", "Pdf");
+    const response = await this.deps.api.post<KnowledgeBaseResponse>(
+      `projects/${projectId}/knowledge-base/${id}/upload`,
+      data,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
     );
     return response.data;
   }

@@ -1,5 +1,6 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
 import { useKnowledgeBaseApi } from "@/modules/knowledge-base/api";
+import { KnowledgeEmbedModalContent } from "@/modules/knowledge-base/components/KnowledgeEmbedModalContent";
 import { KnowledgeModalContent } from "@/modules/knowledge-base/components/KnowledgeModalContent";
 import { useKnowledgeBaseList } from "@/modules/knowledge-base/hooks";
 import { useKnowledgeApi } from "@/modules/knowledge-base/modules/knowledge/api";
@@ -21,6 +22,10 @@ import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { Spotlight, spotlight } from "@mantine/spotlight";
 import {
+  IconFiles,
+  IconInputX,
+  IconLibrary,
+  IconNetwork,
   IconPencil,
   IconPlus,
   IconSearch,
@@ -136,6 +141,17 @@ export const KnowledgeBasePage = () => {
             variant={"light"}
           >
             Search
+          </Button>
+          <Button
+            leftSection={
+              <IconLibrary style={{ height: rem(14), width: rem(14) }} />
+            }
+            component={RRNavLink}
+            size={"xs"}
+            to={"origins"}
+            variant={"light"}
+          >
+            Origins
           </Button>
           <Button
             leftSection={

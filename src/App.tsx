@@ -1,4 +1,5 @@
 import { ProtectedRoute } from "@/core/navigation/ProtectedRoute";
+import useSocket from "@/core/socket/useSocket";
 import { store } from "@/core/store";
 import { StoreContext } from "@/core/store/StoreContext";
 import { useMobXStore } from "@/core/store/useMobXStore";
@@ -11,6 +12,7 @@ import { ClientsListPage } from "@/modules/clients/pages/ClientsListPage";
 import { FunctionsListPage } from "@/modules/functions/pages/FunctionsListPage";
 import { KnowledgeBaseListPage } from "@/modules/knowledge-base/pages/KnowledgeBaseListPage";
 import { KnowledgeBasePage } from "@/modules/knowledge-base/pages/KnowledgeBasePage";
+import { KnowledgeOriginListPage } from "@/modules/knowledge-base/pages/KnowledgeOriginListPage";
 import { ProjectsListPage } from "@/modules/projects/pages/ProjectsListPage";
 import { SettingsPage } from "@/modules/settings/pages/SettingsPage";
 import { MantineProvider, createTheme } from "@mantine/core";
@@ -69,6 +71,10 @@ const router = createBrowserRouter([
         element: <KnowledgeBasePage />,
         path: "/kb/:kbId",
       },
+      {
+        element: <KnowledgeOriginListPage />,
+        path: "/kb/:kbId/origins",
+      },
     ],
     element: <ProtectedRoute />,
     path: "/",
@@ -89,6 +95,7 @@ function App() {
 
 const AppContentView = () => {
   const { config } = useMobXStore();
+  useSocket();
   return (
     <MantineProvider
       forceColorScheme={config.useDarkMode === true ? "dark" : "light"}
