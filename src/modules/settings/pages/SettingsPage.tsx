@@ -25,6 +25,8 @@ const INITIAL_VALUES: SettingsItem = {
   max_tokens: 0,
   model: "",
   prompt: "",
+  require_auth: false,
+  unauthorized_message: "",
   use_voice_generation: false,
   use_voice_recognition: false,
 };
@@ -97,6 +99,18 @@ export const SettingsPageView = () => {
               placeholder="Select model"
               {...form.getInputProps("model")}
             />
+
+            <Switch checked={form.values.require_auth} label="Require auth" />
+
+            {form.values.unauthorized_message ? (
+              <Textarea
+                autosize
+                label="Unauthorized message"
+                maxRows={12}
+                minRows={4}
+                {...form.getInputProps("unauthorized_message")}
+              />
+            ) : null}
 
             <Switch
               checked={form.values.use_voice_recognition}
