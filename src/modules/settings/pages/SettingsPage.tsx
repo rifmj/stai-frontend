@@ -1,4 +1,5 @@
 import { useMobXStore } from "@/core/store/useMobXStore";
+import { ContainedInput } from "@/core/ui/components/ContainedInput";
 import { useSettingsApi } from "@/modules/settings/api";
 import { useModelsSettings, useSettings } from "@/modules/settings/hooks";
 import { SettingsItem } from "@/modules/settings/types";
@@ -100,21 +101,30 @@ export const SettingsPageView = () => {
               {...form.getInputProps("model")}
             />
 
-            <Switch checked={form.values.require_auth} label="Require auth" />
-
-            {form.values.unauthorized_message ? (
-              <Textarea
-                autosize
-                label="Unauthorized message"
-                maxRows={12}
-                minRows={4}
-                {...form.getInputProps("unauthorized_message")}
-              />
-            ) : null}
+            <ContainedInput
+              label="Max tokens"
+              {...form.getInputProps("max_tokens")}
+            />
 
             <Switch
+              onChange={(event) =>
+                form.setFieldValue("require_auth", event.currentTarget.checked)
+              }
+              checked={form.values.require_auth}
+              label="Require auth"
+              {...form.getInputProps("require_auth")}
+            />
+
+            <Switch
+              onChange={(event) =>
+                form.setFieldValue(
+                  "use_voice_recognition",
+                  event.currentTarget.checked,
+                )
+              }
               checked={form.values.use_voice_recognition}
               label="Use voice recognition"
+              {...form.getInputProps("use_voice_recognition")}
             />
 
             <Switch
@@ -129,10 +139,15 @@ export const SettingsPageView = () => {
               {...form.getInputProps("use_voice_generation")}
             />
 
-            <TextInput
-              label="Max tokens"
-              {...form.getInputProps("max_tokens")}
-            />
+            {form.values.require_auth ? (
+              <Textarea
+                autosize
+                label="Unauthorized message"
+                maxRows={12}
+                minRows={4}
+                {...form.getInputProps("unauthorized_message")}
+              />
+            ) : null}
 
             <Textarea
               autosize

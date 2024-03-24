@@ -1,3 +1,4 @@
+import { PlainProtectedRoute } from "@/core/navigation/PlainProtectedRoute";
 import { ProtectedRoute } from "@/core/navigation/ProtectedRoute";
 import useSocket from "@/core/socket/useSocket";
 import { store } from "@/core/store";
@@ -8,7 +9,10 @@ import { SignUpPage } from "@/modules/auth/pages/SignUpPage";
 import { ChannelsListPage } from "@/modules/channels/pages/ChannelsListPage";
 import { ChatPageView } from "@/modules/chats/pages/ChatPage";
 import { ChatsListPage } from "@/modules/chats/pages/ChatsListPage";
+import { AddClientPlainPage } from "@/modules/clients/pages/AddClientsPlainPage";
 import { ClientsListPage } from "@/modules/clients/pages/ClientsListPage";
+import { ClientsListPlainPage } from "@/modules/clients/pages/ClientsListPlainPage";
+import { EditClientPlainPage } from "@/modules/clients/pages/EditClientsPlainPage";
 import { FunctionsListPage } from "@/modules/functions/pages/FunctionsListPage";
 import { KnowledgeBaseListPage } from "@/modules/knowledge-base/pages/KnowledgeBaseListPage";
 import { KnowledgeBasePage } from "@/modules/knowledge-base/pages/KnowledgeBasePage";
@@ -78,6 +82,24 @@ const router = createBrowserRouter([
     ],
     element: <ProtectedRoute />,
     path: "/",
+  },
+  {
+    children: [
+      {
+        element: <ClientsListPlainPage />,
+        path: "/crm/clients",
+      },
+      {
+        element: <AddClientPlainPage />,
+        path: "/crm/clients/add",
+      },
+      {
+        element: <EditClientPlainPage />,
+        path: "/crm/clients/:clientId",
+      },
+    ],
+    element: <PlainProtectedRoute />,
+    path: "/crm",
   },
 ]);
 

@@ -22,8 +22,7 @@ export const AppHeader = observer(() => {
   const projectsList = useProjectsList();
   console.info("current project", projects.currentProject);
   return (
-    <Group justify={"space-between"}>
-      <img height={16} src={logo} />
+    <Group justify={"flex-end"}>
       <Group>
         <Select
           data={projectsList.list.map((value) => ({

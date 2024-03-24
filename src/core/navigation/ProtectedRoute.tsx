@@ -20,6 +20,7 @@ export const ProtectedRoute = () => {
         width: 300,
       }}
       header={{ height: 60 }}
+      layout={"alt"}
       padding="md"
     >
       <AppShell.Header p={"sm"}>

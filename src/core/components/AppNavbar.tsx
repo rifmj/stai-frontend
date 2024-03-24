@@ -1,4 +1,5 @@
-import { NavLink, Stack } from "@mantine/core";
+import { NavbarSimple } from "@/core/components/NavbarSimple";
+import { NavLink } from "@mantine/core";
 import {
   IconBrain,
   IconChartAreaLineFilled,
@@ -8,19 +9,12 @@ import {
   IconSettings,
   IconUser,
 } from "@tabler/icons-react";
-import cx from "clsx";
 import React from "react";
-import {
-  NavLink as RRNavLink,
-  useNavigate,
-  useNavigation,
-} from "react-router-dom";
+import { NavLink as RRNavLink } from "react-router-dom";
 
 export const AppNavbar = () => {
-  const navigate = useNavigate();
-  const s = useNavigation();
   return (
-    <Stack gap={0}>
+    <NavbarSimple>
       <NavLink
         active={window.location.pathname === "/channels"}
         component={RRNavLink}
@@ -71,6 +65,6 @@ export const AppNavbar = () => {
         leftSection={<IconSettings size="1rem" stroke={1.5} />}
         to={"/settings"}
       />
-    </Stack>
+    </NavbarSimple>
   );
 };
