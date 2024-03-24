@@ -4,9 +4,12 @@ import { useClientsList } from "@/modules/clients/hooks";
 import { formatDate } from "@/sdk/utils/date";
 import {
   Alert,
+  Badge,
   Button,
+  Card,
   Divider,
   Group,
+  Image,
   Stack,
   Text,
   Title,
@@ -21,20 +24,15 @@ export const ClientsListPlainPageView = () => {
   const clients = useClientsList(projects.currentProject);
 
   const rows = clients.list.map((client) => (
-    <Stack gap={"xs"} key={client.client_id}>
-      <Group justify={"space-between"}>
-        <Button
-          component={RRNavLink}
-          to={`/crm/clients/${client.client_id}`}
-          variant={"transparent"}
-        >
-          <Title size={"md"}>{client.name || "No name"}</Title>
-        </Button>
-        <Text fw={"bold"} size={"sm"}>
-          {client.custom_fields.room}
-        </Text>
+    <Card padding="sm" radius="md" shadow="sm" withBorder>
+      <Group justify="space-between" mb={"xs"}>
+        <Text fw={500}>{client.name}</Text>
+        {client.custom_fields?.room ? (
+          <Badge color="pink">{client.custom_fields?.room}</Badge>
+        ) : null}
       </Group>
-      <Group gap={"xs"}>
+
+      <Group gap={"xs"} mb={"xs"}>
         {client.custom_fields.check_in_date ? (
           <Text size={"sm"}>
             {formatDate(client.custom_fields.check_in_date, "d MMMM yyyy")}
@@ -47,8 +45,49 @@ export const ClientsListPlainPageView = () => {
           </Text>
         ) : null}
       </Group>
-    </Stack>
+
+      <Button
+        component={RRNavLink}
+        fullWidth
+        radius="md"
+        size={"xs"}
+        to={`/crm/clients/${client.client_id}`}
+        variant={"light"}
+      >
+        Open
+      </Button>
+    </Card>
   ));
+
+  // const rows2 = clients.list.map((client) => (
+  //   <Stack gap={"xs"} key={client.client_id}>
+  //     <Group justify={"space-between"}>
+  //       <Button
+  //         component={RRNavLink}
+  //         to={`/crm/clients/${client.client_id}`}
+  //         variant={"transparent"}
+  //       >
+  //         <Title size={"md"}>{client.name || "No name"}</Title>
+  //       </Button>
+  //       <Text fw={"bold"} size={"sm"}>
+  //         {client.custom_fields.room}
+  //       </Text>
+  //     </Group>
+  //     <Group gap={"xs"}>
+  //       {client.custom_fields.check_in_date ? (
+  //         <Text size={"sm"}>
+  //           {formatDate(client.custom_fields.check_in_date, "d MMMM yyyy")}
+  //         </Text>
+  //       ) : null}
+  //       <Divider orientation={"vertical"} />
+  //       {client.custom_fields.check_out_date ? (
+  //         <Text size={"sm"}>
+  //           {formatDate(client.custom_fields.check_out_date, "d MMMM yyyy")}
+  //         </Text>
+  //       ) : null}
+  //     </Group>
+  //   </Stack>
+  // ));
 
   return (
     <Stack gap={"lg"} p={"md"}>
