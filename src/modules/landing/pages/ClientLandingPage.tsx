@@ -26,22 +26,26 @@ const ClientLandingPageView = () => {
           Please, choose your preferred messenger
         </p>
         <div className="flex justify-center gap-6">
-          <a
-            className="btn bg-gradient-to-r from-green-400 to-green-600 text-white font-bold py-2 px-6 rounded-full shadow-md hover:shadow-lg"
-            href={whatsAppUrl}
-            rel="noreferrer"
-            target={"_blank"}
-          >
-            Whatsapp
-          </a>
-          <a
-            className="btn bg-gradient-to-r from-blue-400 to-blue-600 text-white font-bold py-2 px-6 rounded-full shadow-md hover:shadow-lg"
-            href={telegramUrl}
-            rel="noreferrer"
-            target={"_blank"}
-          >
-            Telegram
-          </a>
+          {waChannel ? (
+            <a
+              className="btn bg-gradient-to-r from-green-400 to-green-600 text-white font-bold py-2 px-6 rounded-full shadow-md hover:shadow-lg"
+              href={whatsAppUrl}
+              rel="noreferrer"
+              target={"_blank"}
+            >
+              Whatsapp
+            </a>
+          ) : null}
+          {tgChannel ? (
+            <a
+              className="btn bg-gradient-to-r from-blue-400 to-blue-600 text-white font-bold py-2 px-6 rounded-full shadow-md hover:shadow-lg"
+              href={telegramUrl}
+              rel="noreferrer"
+              target={"_blank"}
+            >
+              Telegram
+            </a>
+          ) : null}
         </div>
         <p className="text-gray-500 text-sm mt-6">
           By proceeding, you accept the{" "}

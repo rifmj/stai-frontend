@@ -153,6 +153,13 @@ export function ClientPlainEditContent(properties: {
             Show QR code
           </Button>
           <Button
+            component={RRNavLink}
+            to={`/landing/${projects.currentProject}/${clientId}`}
+            variant={"outline"}
+          >
+            Landing
+          </Button>
+          <Button
             color={"yellow"}
             component={RRNavLink}
             to={"/crm/clients"}
