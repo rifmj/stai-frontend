@@ -125,6 +125,10 @@ export function ClientPlainEditContent(properties: {
           {...form.getInputProps("custom_fields.check_out_date")}
         />
 
+        {form.getInputProps("auth_token").value ? (
+          <TextInput label="Auth token" {...form.getInputProps("auth_token")} />
+        ) : null}
+
         <Group justify="flex-start" mt="md">
           <Button type="submit" variant={"light"}>
             Save

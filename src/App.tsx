@@ -17,6 +17,7 @@ import { FunctionsListPage } from "@/modules/functions/pages/FunctionsListPage";
 import { KnowledgeBaseListPage } from "@/modules/knowledge-base/pages/KnowledgeBaseListPage";
 import { KnowledgeBasePage } from "@/modules/knowledge-base/pages/KnowledgeBasePage";
 import { KnowledgeOriginListPage } from "@/modules/knowledge-base/pages/KnowledgeOriginListPage";
+import { ClientLandingPage } from "@/modules/landing/pages/ClientLandingPage";
 import { ProjectsListPage } from "@/modules/projects/pages/ProjectsListPage";
 import { SettingsPage } from "@/modules/settings/pages/SettingsPage";
 import { MantineProvider, createTheme } from "@mantine/core";
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
   {
     element: <SignUpPage />,
     path: "/sign-in",
+  },
+  {
+    element: <ClientLandingPage />,
+    path: "/landing/:projectId/:clientId",
   },
   {
     children: [

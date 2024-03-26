@@ -37,11 +37,30 @@ export default class ClientsApi {
     return data.data;
   }
 
+  async getPublicClient(projectId: string, id: string) {
+    const data = await this.deps.api.get<ClientResponse>(
+      `public-clients/${projectId}/clients/${id}`,
+    );
+    return data.data;
+  }
+
   async list(projectId: string) {
     const data = await this.deps.api.get<ClientListResponse>(
       `projects/${projectId}/clients`,
     );
     return data.data;
+  }
+
+  async setAuthToken(
+    projectId: string,
+    id: string,
+    data: { auth_token: string },
+  ) {
+    const response = await this.deps.api.post<ClientResponse>(
+      `projects/${projectId}/clients/${id}/auth-token`,
+      data,
+    );
+    return response.data;
   }
 
   async update(projectId: string, id: string, data: UpdateClient) {

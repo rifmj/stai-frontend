@@ -4,6 +4,7 @@ import { ClientPlainEditContent } from "@/modules/clients/components/ClientModal
 import { useClientsList } from "@/modules/clients/hooks";
 import { Group, Stack, Title } from "@mantine/core";
 import { observer } from "mobx-react";
+import { nanoid } from "nanoid";
 import React from "react";
 
 export const AddClientPlainPageView = () => {
@@ -21,7 +22,7 @@ export const AddClientPlainPageView = () => {
       <ClientPlainEditContent
         onSubmit={async (data) => {
           await clientsApi.create(projects.currentProject, {
-            auth_token: null,
+            auth_token: nanoid(32),
             custom_fields: data.custom_fields,
             external_id: null,
             name: data.name,

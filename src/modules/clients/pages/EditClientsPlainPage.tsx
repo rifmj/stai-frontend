@@ -5,6 +5,7 @@ import { useClientsList } from "@/modules/clients/hooks";
 import { Group, Stack, Title } from "@mantine/core";
 import { cloneDeep } from "lodash";
 import { observer } from "mobx-react";
+import { nanoid } from "nanoid";
 import React, { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -53,13 +54,29 @@ export const EditClientPlainPageView = () => {
       {client ? (
         <ClientPlainEditContent
           onSubmit={async (data) => {
-            console.info("ddd", data);
             await clientsApi.update(projects.currentProject, client.client_id, {
               custom_fields: {
                 ...client.custom_fields,
                 ...data.custom_fields,
               },
             });
+            if (data.auth_token && client.auth_token !== data.auth_token) {
+              await clientsApi.setAuthToken(
+                projects.currentProject,
+                client.client_id,
+                {
+                  auth_token: data.auth_token,
+                },
+              );
+            } else if (!client.auth_token && !data.auth_token) {
+              await clientsApi.setAuthToken(
+                projects.currentProject,
+                client.client_id,
+                {
+                  auth_token: nanoid(32),
+                },
+              );
+            }
             await clients.mutate();
             navigate(`/crm/clients`);
           }}
