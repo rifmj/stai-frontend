@@ -1,9 +1,21 @@
+import { useMobXStore } from "@/core/store/useMobXStore";
+import { useClientsApi } from "@/modules/clients/api";
+import { useClientsList } from "@/modules/clients/hooks";
 import { UpdateClient } from "@/modules/clients/types";
-import { Button, Group, Stack, TextInput, Textarea } from "@mantine/core";
+import {
+  Button,
+  Group,
+  Modal,
+  Stack,
+  TextInput,
+  Textarea,
+} from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
 import React, { useEffect } from "react";
-import { NavLink as RRNavLink } from "react-router-dom";
+import QRCode from "react-qr-code";
+import { NavLink as RRNavLink, useParams } from "react-router-dom";
 
 const INITIAL_VALUES: UpdateClientForm = {
   auth_token: null,
@@ -90,6 +102,8 @@ export function ClientPlainEditContent(properties: {
   initialValues?: UpdateClient;
   onSubmit(values: UpdateClientForm): void;
 }) {
+  const { clientId } = useParams();
+  const { projects } = useMobXStore();
   const form = useForm<UpdateClientForm>({
     initialValues: INITIAL_VALUES,
     validate: {},
@@ -105,6 +119,8 @@ export function ClientPlainEditContent(properties: {
       form.setValues(INITIAL_VALUES);
     }
   }, [properties.initialValues]);
+
+  const [opened, { close, open }] = useDisclosure(false);
 
   return (
     <form onSubmit={form.onSubmit((values) => properties.onSubmit(values))}>
@@ -133,7 +149,9 @@ export function ClientPlainEditContent(properties: {
           <Button type="submit" variant={"light"}>
             Save
           </Button>
-          <Button variant={"outline"}>Show QR code</Button>
+          <Button onClick={open} variant={"outline"}>
+            Show QR code
+          </Button>
           <Button
             color={"yellow"}
             component={RRNavLink}
@@ -144,6 +162,12 @@ export function ClientPlainEditContent(properties: {
           </Button>
         </Group>
       </Stack>
+
+      <Modal onClose={close} opened={opened} withCloseButton>
+        <QRCode
+          value={`https://${window.location.host}/landing/${projects.currentProject}/${clientId}`}
+        />
+      </Modal>
     </form>
   );
 }
