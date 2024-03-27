@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 
 import logo from "../../../assets/logo.svg";
 
-export const SignInPage = () => {
+export const SignInPage = (properties?: { target?: "crm" }) => {
   const auth = useAuth();
   const navigate = useNavigate();
   const form = useForm({
@@ -44,7 +44,11 @@ export const SignInPage = () => {
       const result = await auth.signIn(email, password);
       console.info("Make request:result", result);
       if (result) {
-        navigate("/");
+        if (properties.target === "crm") {
+          navigate("/crm/clients");
+        } else {
+          navigate("/");
+        }
       }
     } catch (error) {
       console.info("Login:error", error);

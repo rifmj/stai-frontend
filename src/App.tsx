@@ -106,6 +106,10 @@ const router = createBrowserRouter([
     element: <PlainProtectedRoute />,
     path: "/crm",
   },
+  {
+    element: <SignInPage target={"crm"} />,
+    path: "/crm/sign-in",
+  },
 ]);
 
 const theme = createTheme({

@@ -13,8 +13,8 @@ const ClientLandingPageView = () => {
   const tgChannel = channels.find((channel) => channel.type === "Telegram");
   const waChannel = channels.find((channel) => channel.type === "WhatsApp");
 
-  const whatsAppUrl = `https://wa.me/${tgChannel?.public_id}?text=/start%20${client.item?.auth_token}`;
-  const telegramUrl = `https://t.me/${waChannel?.public_id}?text=/start%20${client.item?.auth_token}`;
+  const whatsAppUrl = `https://wa.me/${waChannel?.public_id}?text=/start%20${client.item?.auth_token}`;
+  const telegramUrl = `https://t.me/${tgChannel?.public_id}?text=/start%20${client.item?.auth_token}`;
 
   return (
     <div className="bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center h-screen">
